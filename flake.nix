@@ -11,6 +11,30 @@
       pkgs = import nixpkgs {
         inherit system;
       };
+      ttyd = (with pkgs; stdenv.mkDerivation {
+        pname = "ttyd";
+        version = "1.6.3";
+        src = fetchFromGitHub {
+          sha256 = "sha256-Oj43XLohq7lyK6gq7YJDwdOWbTveNqX4vKE5X1M75eA=";
+          rev = "47c554323a00c413996c6db4df9cf6dde6e2f574";
+          owner = "tsl0922";
+          repo = "ttyd";
+        };
+        nativeBuildInputs = [
+          cmake
+          gnumake
+          gcc
+          libwebsockets
+          zlib
+          libuv
+          json_c
+          libpcap
+          openssl
+        ];
+        installPhase = ''
+          make install DESTDIR=""
+        '';
+      });
       watchdog = (with pkgs; stdenv.mkDerivation {
         pname = "watchdog";
         version = "5.15";
@@ -71,13 +95,13 @@
     in
     rec {
       packages = flake-utils.lib.flattenTree {
-        inherit watchdog ustreamer;
+        inherit watchdog ustreamer ttyd;
       };
       defaultApp = flake-utils.lib.mkApp {
         drv = defaultPackage;
       };
       devShell = pkgs.mkShell {
-        buildInputs = [ ustreamer watchdog ];
+        buildInputs = [ ustreamer watchdog ttyd ];
       };
       # dummy for now until I package the other bajillion things
       defaultPackage = ustreamer;
