@@ -11,6 +11,12 @@
       pkgs = import nixpkgs {
         inherit system;
       };
+      extra = fname: sha256: from: pkgs.fetchurl rec {
+        url = "${from}";
+        name = "${fname}";
+        inherit sha256;
+      };
+      ttyd_html_h = (extra "html.h" "sha256-MJE14kSSsvoFrUNGVKYOBfE9zCwBhtpAzQSRWzmZR6s=" "https://raw.githubusercontent.com/pikvm/packages/master/packages/ttyd/html.h");
       ttyd = (with pkgs; stdenv.mkDerivation {
         pname = "ttyd";
         version = "1.6.3";
@@ -20,6 +26,9 @@
           owner = "tsl0922";
           repo = "ttyd";
         };
+        preBuild = ''
+          install -m644 ${ttyd_html_h} html.h
+        '';
         nativeBuildInputs = [
           cmake
           gnumake
