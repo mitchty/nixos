@@ -1,5 +1,5 @@
 {
-  description = "wip PiKVM flake/nixos port";
+  description = "My out of band flakes/pkgs/modules for NixOS";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
@@ -11,6 +11,7 @@
       pkgs = import nixpkgs {
         inherit system;
       };
+      # Silly wrapper around fetchurl
       extra = fname: sha256: from: pkgs.fetchurl rec {
         url = "${from}";
         name = "${fname}";
