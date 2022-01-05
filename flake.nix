@@ -11,11 +11,35 @@
       pkgs = import nixpkgs {
         inherit system;
       };
+      p = nixpkgs.legacyPackages.${system};
       # Silly wrapper around fetchurl
       extra = fname: sha256: from: pkgs.fetchurl rec {
         url = "${from}";
         name = "${fname}";
         inherit sha256;
+      };
+      seaweedfs = p.buildGoModule rec {
+          pname = "seaweedfs";
+          version = "2.84";
+
+          src = p.fetchFromGitHub {
+            owner = "chrislusf";
+            repo = "seaweedfs";
+            rev = version;
+            sha256 = "1jrwhch0ykcgnfbj5jygl6kwkgdcsh12rc9jm2hckd51n52z075c";
+          };
+
+          vendorSha256 = "sha256-TYVBfjwaoEBKJmIHdwvj/5g4jYmnmJPE1mCL/yET1GQ=";
+
+          subPackages = [ "weed" ];
+
+          postInstall = ''
+            install -dm755 $out/sbin
+            ln -s $out/bin/weed $out/sbin/mount.weed
+          '';
+
+          passthru.tests.version =
+            p.testVersion { package = seaweedfs; command = "weed version"; };
       };
       ttyd_html_h = (extra "html.h" "sha256-MJE14kSSsvoFrUNGVKYOBfE9zCwBhtpAzQSRWzmZR6s=" "https://raw.githubusercontent.com/pikvm/packages/master/packages/ttyd/html.h");
       ttyd = (with pkgs; stdenv.mkDerivation {
@@ -105,7 +129,7 @@
     in
     rec {
       packages = flake-utils.lib.flattenTree {
-        inherit watchdog ustreamer ttyd;
+        inherit watchdog ustreamer ttyd seaweedfs;
       };
       defaultApp = flake-utils.lib.mkApp {
         drv = defaultPackage;
