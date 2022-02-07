@@ -18,24 +18,24 @@
         name = "${fname}";
         inherit sha256;
       };
-      seaweedfs = p.buildGoModule rec {
+      seaweedfs = p.buildGo117Module rec {
           pname = "seaweedfs";
-          version = "2.84";
+          version = "2.88";
 
           src = p.fetchFromGitHub {
             owner = "chrislusf";
             repo = "seaweedfs";
             rev = version;
-            sha256 = "1jrwhch0ykcgnfbj5jygl6kwkgdcsh12rc9jm2hckd51n52z075c";
+            sha256 = "0c5j5swsi8vxn34n2hjia5zylarg49h638zj5i95dnmw0sx1ry07";
           };
 
-          vendorSha256 = "sha256-TYVBfjwaoEBKJmIHdwvj/5g4jYmnmJPE1mCL/yET1GQ=";
+          vendorSha256 = "sha256-p52YtA8U6xsi9upVZyoXjMce2v5bH3DkaRFZhq6MMeY=";
 
           subPackages = [ "weed" ];
 
           postInstall = ''
             install -dm755 $out/sbin
-            ln -s $out/bin/weed $out/sbin/mount.weed
+            ln -sf $out/bin/weed $out/sbin/mount.weed
           '';
 
           passthru.tests.version =
