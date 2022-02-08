@@ -19,6 +19,7 @@
         inherit sha256;
       };
       seaweedfs = p.buildGo117Module rec {
+          name = "weed";
           pname = "seaweedfs";
           version = "2.88";
 
@@ -26,10 +27,10 @@
             owner = "chrislusf";
             repo = "seaweedfs";
             rev = version;
-            sha256 = "0c5j5swsi8vxn34n2hjia5zylarg49h638zj5i95dnmw0sx1ry07";
+            sha256 = "sha256-B/gcuga82lZSLPKjYWAiLyvqf1FRQmHJsH2jqLkusjA=";
           };
 
-          vendorSha256 = "sha256-p52YtA8U6xsi9upVZyoXjMce2v5bH3DkaRFZhq6MMeY=";
+          vendorSha256 = "sha256-N7zOrSMrCR/eOH+08TImI1q2AFGUuWN7xIt3CUVB9rM=";
 
           subPackages = [ "weed" ];
 
