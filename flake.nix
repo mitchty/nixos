@@ -135,10 +135,10 @@
         drv = defaultPackage;
       };
       devShell = pkgs.mkShell {
-        buildInputs = [ ustreamer watchdog ttyd ];
+        buildInputs = [ ustreamer watchdog ttyd seaweedfs ];
       };
       # dummy for now until I package the other bajillion things
-      defaultPackage = ustreamer;
+      defaultPackage = seaweedfs;
     }
   );
 }
