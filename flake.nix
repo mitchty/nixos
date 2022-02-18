@@ -18,30 +18,82 @@
         name = "${fname}";
         inherit sha256;
       };
-      seaweedfs = p.buildGo117Module rec {
-          name = "weed";
-          pname = "seaweedfs";
-          version = "2.88";
 
-          src = p.fetchFromGitHub {
-            owner = "chrislusf";
-            repo = "seaweedfs";
-            rev = version;
-            sha256 = "sha256-B/gcuga82lZSLPKjYWAiLyvqf1FRQmHJsH2jqLkusjA=";
-          };
+      # Rust packages
 
-          vendorSha256 = "sha256-N7zOrSMrCR/eOH+08TImI1q2AFGUuWN7xIt3CUVB9rM=";
+      # s3 filesystem provider like minio
+      garage = p.rustPlatform.buildRustPackage rec {
+        pname = "garage";
+        version = "0.6.0";
 
-          subPackages = [ "weed" ];
+        src = p.fetchFromGitea {
+          domain = "git.deuxfleurs.fr";
+          owner = "Deuxfleurs";
+          repo = "garage";
+          rev = "v${version}";
+          sha256 = "sha256-NNjqDOkMMRyXce+Z7RQpuffCuVhA1U3qH30rSv939ks=";
+        };
 
-          postInstall = ''
-            install -dm755 $out/sbin
-            ln -sf $out/bin/weed $out/sbin/mount.weed
-          '';
+        cargoSha256 = "sha256-eKJxRcC43D8qVLORer34tlmsWhELTbcJbZLyf0MB618=";
 
-          passthru.tests.version =
-            p.testVersion { package = seaweedfs; command = "weed version"; };
+        passthru = {
+          tests.version = p.testVersion { package = garage; };
+        };
       };
+
+      # Testing out some watch related things, need to PR adding a Cargo.lock
+      # file as per
+      # https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html as
+      # we shouldn't have to cargo update to get a cargo.lock file for a command
+      # line app
+      hwatch = p.rustPlatform.buildRustPackage rec {
+        pname = "hwatch";
+        version = "0.3.1";
+
+        src = p.fetchFromGitHub {
+          owner = "blacknon";
+          repo = "hwatch";
+          rev = version;
+          sha256 = "sha256-5szZ4SgPbZEfCTdFcFgOxHJfI5muOdA4KGKBd4+okc4=";
+          # sha256 = pkgs.lib.fakeSha256;
+          forceFetchGit = true;
+        };
+
+        cargoPatches = [
+          ./patches/hwatch-add-cargo-lock.patch
+        ];
+
+        cargoSha256 = "sha256-YFm8EOcFnKAbjggfOoiLkRw8fufc2weiETrUdEAfgKE=";
+      };
+
+      # Go packages
+
+      # Like minio, will test/compare this with garage ^^^ to see which works better
+      seaweedfs = p.buildGo117Module rec {
+        pname = "seaweedfs";
+        version = "2.88";
+
+        src = p.fetchFromGitHub {
+          owner = "chrislusf";
+          repo = "seaweedfs";
+          rev = version;
+          sha256 = "sha256-B/gcuga82lZSLPKjYWAiLyvqf1FRQmHJsH2jqLkusjA=";
+        };
+
+        vendorSha256 = "sha256-N7zOrSMrCR/eOH+08TImI1q2AFGUuWN7xIt3CUVB9rM=";
+
+        subPackages = [ "weed" ];
+
+        postInstall = ''
+          install -dm755 $out/sbin
+          ln -sf $out/bin/weed $out/sbin/mount.weed
+        '';
+
+        passthru.tests.version =
+          p.testVersion { package = seaweedfs; command = "weed version"; };
+      };
+
+      # PiKVM related (incomplete)
       ttyd_html_h = (extra "html.h" "sha256-MJE14kSSsvoFrUNGVKYOBfE9zCwBhtpAzQSRWzmZR6s=" "https://raw.githubusercontent.com/pikvm/packages/master/packages/ttyd/html.h");
       ttyd = (with pkgs; stdenv.mkDerivation {
         pname = "ttyd";
@@ -130,13 +182,14 @@
     in
     rec {
       packages = flake-utils.lib.flattenTree {
-        inherit watchdog ustreamer ttyd seaweedfs;
+        inherit watchdog ustreamer ttyd seaweedfs garage hwatch;
+        # inherit watchdog ustreamer ttyd seaweedfs;
       };
       defaultApp = flake-utils.lib.mkApp {
         drv = defaultPackage;
       };
       devShell = pkgs.mkShell {
-        buildInputs = [ ustreamer watchdog ttyd seaweedfs ];
+        buildInputs = [ ustreamer watchdog ttyd seaweedfs garage hwatch ];
       };
       # dummy for now until I package the other bajillion things
       defaultPackage = seaweedfs;
