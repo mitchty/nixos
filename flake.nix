@@ -64,6 +64,10 @@
         ];
 
         cargoSha256 = "sha256-YFm8EOcFnKAbjggfOoiLkRw8fufc2weiETrUdEAfgKE=";
+
+        passthru = {
+          tests.version = p.testVersion { package = hwatch; };
+        };
       };
 
       # Go packages
