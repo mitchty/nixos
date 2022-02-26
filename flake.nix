@@ -48,14 +48,13 @@
       # line app
       hwatch = p.rustPlatform.buildRustPackage rec {
         pname = "hwatch";
-        version = "0.3.1";
+        version = "0.3.3";
 
         src = p.fetchFromGitHub {
           owner = "blacknon";
           repo = "hwatch";
           rev = version;
-          sha256 = "sha256-5szZ4SgPbZEfCTdFcFgOxHJfI5muOdA4KGKBd4+okc4=";
-          # sha256 = pkgs.lib.fakeSha256;
+          sha256 = "sha256-fJM9MYaGmwT3zVaxRjecfCzfXw+Gjwf73DSoOchucoE=";
           forceFetchGit = true;
         };
 
@@ -63,11 +62,9 @@
           ./patches/hwatch-add-cargo-lock.patch
         ];
 
-        cargoSha256 = "sha256-YFm8EOcFnKAbjggfOoiLkRw8fufc2weiETrUdEAfgKE=";
+        cargoSha256 = "sha256-CvZNy4cGeFDO/pFQv8Gc5AvUDtMU1ZLTSsajO2CxZxY=";
 
-        passthru = {
-          tests.version = p.testVersion { package = hwatch; };
-        };
+        passthru.tests.version = p.testVersion { package = hwatch; };
       };
 
       # Go packages
