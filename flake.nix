@@ -90,8 +90,9 @@
           ln -sf $out/bin/weed $out/sbin/mount.weed
         '';
 
-        passthru.tests.version =
-          p.testVersion { package = seaweedfs; command = "weed version"; };
+        meta.mainProgram = "weed";
+
+        passthru.tests.version = p.testVersion { package = seaweedfs; command = "weed version"; };
       };
 
       # PiKVM related (incomplete)
