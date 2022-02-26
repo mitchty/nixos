@@ -36,9 +36,7 @@
 
         cargoSha256 = "sha256-eKJxRcC43D8qVLORer34tlmsWhELTbcJbZLyf0MB618=";
 
-        passthru = {
-          tests.version = p.testVersion { package = garage; };
-        };
+        passthru.tests.version = p.testVersion { package = garage; };
       };
 
       # Testing out some watch related things, need to PR adding a Cargo.lock
