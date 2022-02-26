@@ -8,7 +8,7 @@ _base=$(basename "$0")
 _dir=$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P || exit 126)
 export _base _dir
 
-set -e
+set -ex
 
 # TODO: for now just look for certain things, future me figure out how to nix
 # eval what packages are present in the flake.
@@ -19,13 +19,13 @@ ok=0
 for pkg in garage seaweedfs hwatch; do
   latest=$(eval $(nix eval --raw ".#${pkg}.latest" 2> /dev/null ))
   ours=$(nix eval --raw ".#${pkg}.version" 2> /dev/null)
-  if [[ "${latest}" != "${ours}" ]]; then
+  if [ "${latest}" != "${ours}" ]; then
     printf "%s latest version out of date: latest=%s ours=%s\n" "${pkg}" "${latest}" "${ours}"
     ok=$((ok+1))
   fi
 done
 
-if [[ "${ok}" = 0 ]]; then
+if [ "${ok}" = 0 ]; then
   printf "everything is up to date\n"
 fi
 
