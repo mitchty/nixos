@@ -1,0 +1,11 @@
+* My out of band nix packages/modules flake repo
+
+  For now this is a bit of a "before I upstream things to nixpkgs" test bed of stuff.
+
+  About the only thing of huge note is probably the [[file:ci.sh][ci]] script that checks for newer package versions.
+
+  About the only things of note is I'm packaging the following not in nixpkgs:
+    - [[https://garagehq.deuxfleurs.fr/][garage]] A s3 compatible server, a la minio
+    - [[https://github.com/blacknon/hwatch][hwatch]] A watch command with history mostly...
+
+  Anything else in here should be considered a work in progress and thus ignored.

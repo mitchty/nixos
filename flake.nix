@@ -37,6 +37,8 @@
         cargoSha256 = "sha256-eKJxRcC43D8qVLORer34tlmsWhELTbcJbZLyf0MB618=";
 
         passthru.tests.version = p.testVersion { package = garage; };
+
+        latest = "curl --header 'Accept: application/json' --silent 'https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases' | jq -r '.[0].tag_name' | tr -d v";
       };
 
       # Testing out some watch related things, need to PR adding a Cargo.lock
@@ -63,6 +65,8 @@
         cargoSha256 = "sha256-CvZNy4cGeFDO/pFQv8Gc5AvUDtMU1ZLTSsajO2CxZxY=";
 
         passthru.tests.version = p.testVersion { package = hwatch; };
+
+        latest = "curl --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
       };
 
       # Go packages
@@ -91,6 +95,8 @@
         meta.mainProgram = "weed";
 
         passthru.tests.version = p.testVersion { package = seaweedfs; command = "weed version"; };
+
+        latest = "curl --silent 'https://api.github.com/repos/chrislusf/seaweedfs/releases/latest' | jq -r '.tag_name'";
       };
 
       # PiKVM related (incomplete)
