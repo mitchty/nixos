@@ -8,7 +8,7 @@ _base=$(basename "$0")
 _dir=$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P || exit 126)
 export _base _dir
 
-set -ex
+set -e
 
 # TODO: for now just look for certain things, future me figure out how to nix
 # eval what packages are present in the flake.
