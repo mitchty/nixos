@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 #-*-mode: Shell-script; coding: utf-8;-*-
-#!nix-shell -i bash -p bash jq coreutils
+#!nix-shell -i bash -p bash jq coreutils curl
 # File: ci.sh
 # Copyright: 2022 Mitchell Tishmack
 # Description: Script for ci to run to see if any of the packages have updates
@@ -16,7 +16,7 @@ set -e
 ok=0
 
 # 2> /dev/null to nuke the stderr warning: messages
-for pkg in garage seaweedfs hwatch; do
+for pkg in garage seaweedfs hwatch bottom; do
   latest=$(eval $(nix eval --raw ".#${pkg}.latest" 2> /dev/null ))
   ours=$(nix eval --raw ".#${pkg}.version" 2> /dev/null)
   if [ "${latest}" != "${ours}" ]; then

@@ -69,6 +69,33 @@
         latest = "curl --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
       };
 
+      # https://github.com/ClementTsang/bottom
+      bottom = p.rustPlatform.buildRustPackage rec {
+        pname = "bottom";
+        version = "0.6.8";
+
+        src = p.fetchFromGitHub {
+          owner = "ClementTsang";
+          repo = "bottom";
+          rev = version;
+          sha256 = "sha256-zmiYVLaXKHH+MObO75wOiGkDetKy4bVLe7IAqiO2ER8=";
+        };
+
+        # Macos needs a few Core system libraries
+        buildInputs = p.lib.optionals p.stdenv.isDarwin [
+          p.darwin.apple_sdk.frameworks.DiskArbitration
+          p.darwin.apple_sdk.frameworks.Foundation
+        ];
+
+        cargoSha256 = "sha256-GMG6YBm/jA5D7wxC2gczMn/6Lkqiq/toSPNf86kgOys=";
+
+        meta.mainProgram = "btm";
+
+        passthru.tests.version = p.testVersion { package = bottom; };
+
+        latest = "curl --silent 'https://api.github.com/repos/ClementTsang/bottom/releases/latest' | jq -r '.tag_name'";
+      };
+
       # Go packages
 
       # Like minio, will test/compare this with garage ^^^ to see which works better
@@ -188,14 +215,14 @@
     in
     rec {
       packages = flake-utils.lib.flattenTree {
-        inherit watchdog ustreamer ttyd seaweedfs garage hwatch;
+        inherit watchdog ustreamer ttyd seaweedfs garage hwatch bottom;
         # inherit watchdog ustreamer ttyd seaweedfs;
       };
       defaultApp = flake-utils.lib.mkApp {
         drv = defaultPackage;
       };
       devShell = pkgs.mkShell {
-        buildInputs = [ ustreamer watchdog ttyd seaweedfs garage hwatch ];
+        buildInputs = [ ustreamer watchdog ttyd seaweedfs garage hwatch bottom ];
       };
       # dummy for now until I package the other bajillion things
       defaultPackage = seaweedfs;
