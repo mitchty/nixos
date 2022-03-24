@@ -2,7 +2,7 @@
 
   For now this is a bit of a "before I upstream things to nixpkgs" test bed of stuff.
 
-  About the only thing of huge note is probably the [[file:ci.sh][ci]] script that checks for newer package versions.
+  About the only thing of huge note is probably the [[file:bin/versions.sh][versions]] script that checks for newer package versions.
 
   About the only things of note is I'm packaging the following not in nixpkgs:
     - [[https://garagehq.deuxfleurs.fr/][garage]] A s3 compatible server, a la minio
