@@ -100,16 +100,16 @@
       # Like minio, will test/compare this with garage ^^^ to see which works better
       seaweedfs = p.buildGo117Module rec {
         pname = "seaweedfs";
-        version = "2.95";
+        version = "2.96";
 
         src = p.fetchFromGitHub {
           owner = "chrislusf";
           repo = pname;
           rev = version;
-          sha256 = "sha256-nnu2a9nODmuRSk2CkD170yVNG2c7BM97tbJT5R+dN3E=";
+          sha256 = "sha256-3Cih1QLNUtbNieyMAEipG2ceopH1P/+9sHwMXhm/b9Y=";
         };
 
-        vendorSha256 = "sha256-k2851Mb0xVRxoL+s6/W6MAJYTYO/UV/UXh5DrvH74JA=";
+        vendorSha256 = "sha256-CaXSH4YFTyq+2mFXoZnhNZD4QjYjzpC+cQCyMtccL9w=";
 
         subPackages = [ "weed" ];
 
