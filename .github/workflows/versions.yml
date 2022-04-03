@@ -1,5 +1,8 @@
 name: Check for updated versions
 on:
+  push:
+    paths:
+      - 'bin/versions**'
   schedule:
     - cron: "15 1 * * 0"
   workflow_dispatch:
