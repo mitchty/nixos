@@ -2,22 +2,50 @@
   description = "My out of band flakes/pkgs/modules for NixOS";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
+    unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, flake-utils, ... }: flake-utils.lib.eachDefaultSystem (system:
+  outputs = { nixpkgs, unstable, flake-utils, ... }:  flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = import nixpkgs {
         inherit system;
       };
       p = nixpkgs.legacyPackages.${system};
+      u = unstable.legacyPackages.${system};
+
+      fake = p.lib.fakeSha256;
+
       # Silly wrapper around fetchurl
       extra = fname: sha256: from: pkgs.fetchurl rec {
         url = "${from}";
         name = "${fname}";
         inherit sha256;
       };
+
+      # Ye olde halockrun and hatimerun
+      hatools = (with pkgs; stdenv.mkDerivation {
+        pname = "hatools";
+        version = "2.1.4";
+
+        src = fetchFromGitHub {
+          sha256 = "sha256-Pl5hbL7aHK261/ReQ7kmHyoEprjD/sOL9kFSXR2g4Ok=";
+          rev = "v2_14";
+          owner = "fatalmind";
+          repo = "hatools";
+        };
+
+        nativeBuildInputs = [
+          autoreconfHook
+          gnumake
+          gcc
+        ];
+
+        installPhase = ''
+          make install DESTDIR=""
+        '';
+      });
 
       # Rust packages
 
@@ -29,8 +57,8 @@
         src = p.fetchFromGitea {
           domain = "git.deuxfleurs.fr";
           owner = "Deuxfleurs";
-          repo = "garage";
-          rev = "v${version}";
+          repo = pname;
+          rev = "v" + version;
           sha256 = "sha256-BEFxPU4yPtctN7H+EcxJpXnf4tyqBseskls0ZA9748k=";
         };
 
@@ -52,7 +80,7 @@
 
         src = p.fetchFromGitHub {
           owner = "blacknon";
-          repo = "hwatch";
+          repo = pname;
           rev = version;
           sha256 = "sha256-fJM9MYaGmwT3zVaxRjecfCzfXw+Gjwf73DSoOchucoE=";
           forceFetchGit = true;
@@ -76,7 +104,7 @@
 
         src = p.fetchFromGitHub {
           owner = "ClementTsang";
-          repo = "bottom";
+          repo = pname;
           rev = version;
           sha256 = "sha256-zmiYVLaXKHH+MObO75wOiGkDetKy4bVLe7IAqiO2ER8=";
         };
@@ -98,18 +126,18 @@
 
       # Go packages
       # Like minio, will test/compare this with garage ^^^ to see which works better
-      seaweedfs = p.buildGo117Module rec {
+      seaweedfs = u.buildGo118Module rec {
         pname = "seaweedfs";
-        version = "2.97";
+        version = "2.99";
 
         src = p.fetchFromGitHub {
           owner = "chrislusf";
           repo = pname;
           rev = version;
-          sha256 = "sha256-3Y+Q1ZrSHOITbxQsQE9/ZKwqHb+cJj5bAD/3ZUJRlB0=";
+          sha256 = "sha256-PexO7I7l4GCFkViZpgjOkDrM05quANRR9o+lKFTG5PE=";
         };
 
-        vendorSha256 = "sha256-2J19BwEymU3GC5BcE7Cyo9xGogi+bqlt3lNda1JiFrY=";
+        vendorSha256 = "sha256-gfgjbG+QeyIY/vTAZkvZj6ODUD96Y6omGwM2tJG8HCw=";
 
         subPackages = [ "weed" ];
 
@@ -126,19 +154,62 @@
       };
 
       # PiKVM related (incomplete)
+      #
+      # Picking back up from this commit for now
+      # https://github.com/pikvm/packages/tree/fa1982ec7db49ee66a5429919738cd9e0c16587b/packages
+      #
+      # TODO: Get this building and deps, bit of a stub for now
+      # TODO: The arch package does a *LOT* of things this won't do that we'll relegate to a nixos module
+      # like ensuring certain sysctl's are set etc.... users blah blah blah
+      #
+      # Also todo is ssl certs that nixos module should make ssl certs easy peasy lemon whatever
+      #
+      # TODO: Figure out if its better to just build janus-gateway here with these overrides or not:
+      # https://github.com/pikvm/packages/blob/fa1982ec7db49ee66a5429919738cd9e0c16587b/packages/janus-gateway-pikvm/PKGBUILD#L57-L65
+      kvmd = p.python310.pkgs.buildPythonPackage rec {
+        pname = "kvmd";
+        version = "3.56";
+
+        src = p.fetchFromGitHub {
+          sha256 = "sha256-D+Dyg9tjjrTvBlLRBOnJKUc2/RT5zJFdqldY/RaSpzU=";
+          rev = "v3.56";
+          owner = "pikvm";
+          repo = pname;
+        };
+
+        # TODO: unit tests fail, figure out how to let them pass if possible
+        doCheck = false;
+
+        propagatedBuildInputs = with pkgs; [
+          freetype
+          libgpiod
+          nginx
+          openssl
+          platformio
+          janus-gateway
+          ustreamer
+          zstd
+          ipmitool
+          avrdude
+          v4l_utils
+        ];
+      };
       ttyd_html_h = (extra "html.h" "sha256-MJE14kSSsvoFrUNGVKYOBfE9zCwBhtpAzQSRWzmZR6s=" "https://raw.githubusercontent.com/pikvm/packages/master/packages/ttyd/html.h");
       ttyd = (with pkgs; stdenv.mkDerivation {
         pname = "ttyd";
         version = "1.6.3";
+
         src = fetchFromGitHub {
           sha256 = "sha256-Oj43XLohq7lyK6gq7YJDwdOWbTveNqX4vKE5X1M75eA=";
           rev = "47c554323a00c413996c6db4df9cf6dde6e2f574";
           owner = "tsl0922";
-          repo = "ttyd";
+          repo = pname;
         };
+
         preBuild = ''
           install -m644 ${ttyd_html_h} html.h
         '';
+
         nativeBuildInputs = [
           cmake
           gnumake
@@ -150,61 +221,76 @@
           libpcap
           openssl
         ];
+
         installPhase = ''
           make install DESTDIR=""
         '';
       });
+
+      # TODO: https://sourceforge.net/projects/watchdog/ is at 5.16 pikvm still has 3 year old version, that important?
       watchdog = (with pkgs; stdenv.mkDerivation {
         pname = "watchdog";
         version = "5.15";
+
         src = fetchgit {
           url = "https://git.code.sf.net/p/watchdog/code";
           rev = "03d67da";
           sha256 = "sha256-ZLLObroUWcdGPP4jpbR7IMHx0Yj4uUY6al0ztE2k5bI=";
           fetchSubmodules = true;
         };
+
         nativeBuildInputs = [
           autoreconfHook
           pkg-config
           gnumake
           gcc
         ];
+
         # The config file uses DESTDIR in its install setup for a file in /etc
         postPatch = ''
           sed -ie "s/DESTDIR/PREFIX/" Makefile.am
         '';
+
         configureFlags = [
           "--with-pidfile=/run/watchdog.pid"
           "--with-ka_pidfile=/run/wd_keepalive.pid"
           "--disable-nfs"
         ];
+
         buildPhase = ''
           make -j $NIX_BUILD_CORES
         '';
+
         postInstall = ''
           ln -s $out/sbin $out/bin
         '';
+
         installPhase = ''
           make install DESTDIR="" PREFIX=$out
         '';
       });
       ustreamer = (with pkgs; stdenv.mkDerivation {
         pname = "ustreamer";
-        version = "4.10";
-        src = fetchgit {
-          url = "https://github.com/pikvm/ustreamer";
-          rev = "v4.10";
-          sha256 = "sha256-Wn19J3CvRQPG6KogDeZXO5Xb+jNZdEQBzmR/0bGfO6A=";
+        version = "4.13";
+        src = p.fetchFromGitHub {
+          owner = "pikvm";
+          repo = "ustreamer";
+          rev = "v4.13";
+          sha256 = "sha256-otiBdGHQLjYE8/FDJUZzcU+f9ZfkPRtXQ0EBVa4Ogcw=";
           fetchSubmodules = true;
         };
+
         nativeBuildInputs = [
           gnumake
           gcc
           libevent
           libjpeg
           libbsd
-        ]; # TODO: rpi related work for OMX/GPIO as per https://github.com/pikvm/ustreamer#building
+        ];
+
+        # TODO: rpi related work for OMX/GPIO as per https://github.com/pikvm/ustreamer#building
         buildPhase = "make -j $NIX_BUILD_CORES";
+
         installPhase = ''
           install -dm755 $out/bin
           install -m755 src/ustreamer.bin $out/bin/ustreamer
@@ -214,14 +300,32 @@
     in
     rec {
       packages = flake-utils.lib.flattenTree {
-        inherit watchdog ustreamer ttyd seaweedfs garage hwatch bottom;
-        # inherit watchdog ustreamer ttyd seaweedfs;
+        inherit watchdog;
+        inherit ustreamer;
+        inherit ttyd;
+        inherit seaweedfs;
+        inherit garage;
+        inherit hwatch;
+        inherit bottom;
+        inherit kvmd;
+        inherit hatools;
       };
+
       defaultApp = flake-utils.lib.mkApp {
         drv = defaultPackage;
       };
       devShell = pkgs.mkShell {
-        buildInputs = [ ustreamer watchdog ttyd seaweedfs garage hwatch bottom ];
+        buildInputs = [
+          ustreamer
+          watchdog
+          ttyd
+          seaweedfs
+          garage
+          hwatch
+          bottom
+          kvmd
+          hatools
+        ];
       };
       # dummy for now until I package the other bajillion things
       defaultPackage = seaweedfs;
