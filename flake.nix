@@ -76,21 +76,29 @@
       # line app
       hwatch = p.rustPlatform.buildRustPackage rec {
         pname = "hwatch";
-        version = "0.3.3";
+        version = "0.3.4";
 
         src = p.fetchFromGitHub {
           owner = "blacknon";
           repo = pname;
           rev = version;
-          sha256 = "sha256-fJM9MYaGmwT3zVaxRjecfCzfXw+Gjwf73DSoOchucoE=";
+          sha256 = "sha256-I8i7lyD//vLGU2BcKMf2h5qydV6LRefzYcgBFxLbFCg=";
           forceFetchGit = true;
         };
 
+        # Update via:
+        # gh blacknon/hwatch
+        # git fetch
+        # git co $version
+        # cargo update
+        # git add -f Cargo.lock
+        # git diff --cached > ~/src/pub/github.com/mitchty/nixos/patches/hwatch-add-cargo-lock.patch
+        # fill out new cargosha256 and cross fingies
         cargoPatches = [
           ./patches/hwatch-add-cargo-lock.patch
         ];
 
-        cargoSha256 = "sha256-CvZNy4cGeFDO/pFQv8Gc5AvUDtMU1ZLTSsajO2CxZxY=";
+        cargoSha256 = "sha256-MFhjugbkNYQ7TigM+ihyquAgHRBFOJnvPJWZ4GlrqRY=";
 
         passthru.tests.version = p.testVersion { package = hwatch; };
 
