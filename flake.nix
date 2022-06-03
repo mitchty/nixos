@@ -161,6 +161,39 @@
         latest = "curl --silent 'https://api.github.com/repos/chrislusf/seaweedfs/releases/latest' | jq -r '.tag_name'";
       };
 
+      jira-cli = u.buildGo118Module rec {
+        oname = "ankitpokhrel";
+        pname = "jira-cli";
+        version = "v0.3.0";
+
+        src = p.fetchFromGitHub {
+          owner = oname;
+          repo = pname;
+          rev = version;
+          sha256 = "sha256-sPoFv3Gzue5H6TJuQZJvqB/Dx/URp9Kt2UuIvKSnAxg=";
+        };
+
+        # For a rather contrived test in the test suite that uses this...
+        # https://github.com/ankitpokhrel/jira-cli/blob/55d0d33dc0879c743445451b5c22e69c06383a16/pkg/tui/helper.go#L58
+        # But that function mixes up runtime configuration assumptions (e.g.
+        # less/more etc..) exist at runtime with what its testing:
+        # https://github.com/ankitpokhrel/jira-cli/blob/main/pkg/tui/helper_test.go#L89-L101
+        #
+        # Instead of bothering trying to make an environment that will conform
+        # to its expectations just skip testing the pager stuff.
+        postPatch = ''
+          substituteInPlace pkg/tui/helper_test.go --replace "TestGetPager" "SkipTestGetPager"
+        '';
+
+        vendorSha256 = "sha256-UO30/D65vpu3PgEsfSDL3nYgkwo5Cj+1WKiokk7KKKg=";
+
+        meta.mainProgram = "jira";
+
+        passthru.tests.version = p.testVersion { package = jira-cli; };
+
+        latest = "curl --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name'";
+      };
+
       # PiKVM related (incomplete)
       #
       # Picking back up from this commit for now
@@ -312,6 +345,7 @@
         inherit ustreamer;
         inherit ttyd;
         inherit seaweedfs;
+        inherit jira-cli;
         inherit garage;
         inherit hwatch;
         inherit bottom;
@@ -328,6 +362,7 @@
           watchdog
           ttyd
           seaweedfs
+          jira-cli
           garage
           hwatch
           bottom

@@ -16,7 +16,7 @@ set -e
 ok=0
 
 # 2> /dev/null to nuke the stderr warning: messages
-for pkg in seaweedfs hwatch bottom; do
+for pkg in seaweedfs hwatch bottom jira-cli; do
   latest=$(eval $(nix eval --raw ".#${pkg}.latest" 2> /dev/null ))
   ours=$(nix eval --raw ".#${pkg}.version" 2> /dev/null)
   if [ "${latest}" != "${ours}" ]; then
