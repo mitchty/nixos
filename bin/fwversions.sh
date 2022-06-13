@@ -24,7 +24,16 @@ cleanup() {
 trap cleanup EXIT
 
 cd "${T}"
-puppeteer print https://tascam.com/us/product/mixcast_4/download test.pdf > /dev/null 2>&1
+
+popts="https://tascam.com/us/product/mixcast_4/download test.pdf"
+
+# Running through github actions runs as root, so we need to add --no-sandbox
+# for puppeteer to work I guess.
+if [ $(id -u) -eq 0 ]; then
+  popts="--no-sandbox ${popts}"
+fi
+
+puppeteer print ${popts} > /dev/null 2>&1
 
 curr="https://tascam.com/downloads/products/tascam/mixcast_4/mixcast4_fw_v121.zip"
 latest=$(pdfx -v test.pdf | grep -E '(mixcast_4.*_fw_.*.zip)' | sort -ur | head -n1 | awk '{print $2}')
@@ -38,7 +47,7 @@ if [[ "${curr}" != "${latest}" ]]; then
 fi
 
 if [ "${ok}" = 0 ]; then
-  printf "nothing new\n"
+  printf "nothing new\n" >&2
 fi
 
 exit $ok
