@@ -5,17 +5,21 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
     unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    rust.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { nixpkgs, unstable, flake-utils, ... }:  flake-utils.lib.eachDefaultSystem (system:
+  outputs = { nixpkgs, unstable, flake-utils, rust, ... }: flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = import nixpkgs {
         inherit system;
+        overlays = [
+          (import rust)
+        ];
       };
       p = nixpkgs.legacyPackages.${system};
       u = unstable.legacyPackages.${system};
 
-      fake = p.lib.fakeSha256;
+      fake = pkgs.legacyPackages.${system}.lib.fakeSha256;
 
       # Silly wrapper around fetchurl
       extra = fname: sha256: from: pkgs.fetchurl rec {
@@ -74,20 +78,23 @@
       # https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html as
       # we shouldn't have to cargo update to get a cargo.lock file for a command
       # line app
-      hwatch = p.rustPlatform.buildRustPackage rec {
+      hwatch = with pkgs; (pkgs.makeRustPlatform {
+        cargo = rust-bin.stable.latest.minimal;
+        rustc = rust-bin.stable.latest.minimal;
+      }).buildRustPackage rec {
         pname = "hwatch";
-        version = "0.3.4";
+        version = "0.3.6";
 
-        src = p.fetchFromGitHub {
+        src = fetchFromGitHub {
           owner = "blacknon";
           repo = pname;
           rev = version;
-          sha256 = "sha256-I8i7lyD//vLGU2BcKMf2h5qydV6LRefzYcgBFxLbFCg=";
+          sha256 = "sha256-uaAgA6DWwYVT9mQh55onW+qxIC2i9GVuimctTJpUgfA=";
           forceFetchGit = true;
         };
 
         # Update via:
-        # gh blacknon/hwatch
+        # gi blacknon/hwatch
         # git fetch
         # git co $version
         # cargo update
@@ -98,9 +105,9 @@
           ./patches/hwatch-add-cargo-lock.patch
         ];
 
-        cargoSha256 = "sha256-MFhjugbkNYQ7TigM+ihyquAgHRBFOJnvPJWZ4GlrqRY=";
+        cargoSha256 = "sha256-Xt3Z6ax3Y45KZhTYMBr/Rfx1o+ZAoPYj51SN5hnrXQM=";
 
-        passthru.tests.version = p.testVersion { package = hwatch; };
+        passthru.tests.version = testVersion { package = hwatch; };
 
         latest = "curl --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
       };
