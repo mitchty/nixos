@@ -29,15 +29,16 @@
       };
 
       # Ye olde halockrun and hatimerun
-      hatools = (with pkgs; stdenv.mkDerivation {
+      hatools = (with pkgs; stdenv.mkDerivation rec {
+        oname = "fatalmind";
         pname = "hatools";
         version = "2.1.4";
 
         src = fetchFromGitHub {
           sha256 = "sha256-Pl5hbL7aHK261/ReQ7kmHyoEprjD/sOL9kFSXR2g4Ok=";
           rev = "v2_14";
-          owner = "fatalmind";
-          repo = "hatools";
+          owner = oname;
+          repo = pname;
         };
 
         nativeBuildInputs = [
