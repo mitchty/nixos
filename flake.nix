@@ -53,26 +53,6 @@
 
       # Rust packages
 
-      # s3 filesystem provider like minio
-      garage = p.rustPlatform.buildRustPackage rec {
-        pname = "garage";
-        version = "0.6.1";
-
-        src = p.fetchFromGitea {
-          domain = "git.deuxfleurs.fr";
-          owner = "Deuxfleurs";
-          repo = pname;
-          rev = "v" + version;
-          sha256 = "sha256-BEFxPU4yPtctN7H+EcxJpXnf4tyqBseskls0ZA9748k=";
-        };
-
-        cargoSha256 = "sha256-/mOH7VOfIHEydnJUUSts44aGb8tS1/Faxiu4pQDeobY=";
-
-        passthru.tests.version = p.testVersion { package = garage; };
-
-        latest = "curl --header 'Accept: application/json' --silent 'https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases' | jq -r '.[0].tag_name' | tr -d v";
-      };
-
       # Testing out some watch related things, need to PR adding a Cargo.lock
       # file as per
       # https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html as
@@ -353,7 +333,6 @@
         inherit ttyd;
         inherit seaweedfs;
         inherit jira-cli;
-        inherit garage;
         inherit hwatch;
         inherit bottom;
         inherit kvmd;
@@ -370,7 +349,6 @@
           ttyd
           seaweedfs
           jira-cli
-          garage
           hwatch
           bottom
           kvmd
