@@ -121,19 +121,22 @@
       };
 
       # Go packages
-      # Like minio, will test/compare this with garage ^^^ to see which works better
-      seaweedfs = u.buildGo118Module rec {
+      # Like minio...ish
+      # TODO: Get this building again on macos, some weird cgo things going on with go-ieproxy
+      # Leaving not working efforts inline for future me to know what doesn't work.
+      seaweedfs = with unstable.legacyPackages.${system}; buildGo118Module rec {
+        oname = "chrislusf";
         pname = "seaweedfs";
-        version = "2.99";
+        version = "3.12";
 
-        src = p.fetchFromGitHub {
-          owner = "chrislusf";
+        src = fetchFromGitHub {
+          owner = oname;
           repo = pname;
           rev = version;
-          sha256 = "sha256-PexO7I7l4GCFkViZpgjOkDrM05quANRR9o+lKFTG5PE=";
+          sha256 = "sha256-SsavO2b4k6rmx0PWf/5CEjtlmt0m7j+T6MJwC2uGykE=";
         };
 
-        vendorSha256 = "sha256-gfgjbG+QeyIY/vTAZkvZj6ODUD96Y6omGwM2tJG8HCw=";
+        vendorSha256 = "sha256-cOu155LmV7zmKQJGk3WSPRWbTqf5lNbm+QYDR2bhx5I=";
 
         subPackages = [ "weed" ];
 
@@ -142,9 +145,27 @@
           ln -sf $out/bin/weed $out/sbin/mount.weed
         '';
 
+        # Macos needs a few Core system libraries for c interop, mostly
+        # CFNetwork for this new dep:
+        # https://github.com/mattn/go-ieproxy/blob/master/ieproxy_darwin.go#L3-L8
+        buildInputs = lib.optionals stdenv.isDarwin [
+          p.darwin.apple_sdk.frameworks.CoreServices
+          p.darwin.apple_sdk.frameworks.Foundation
+          p.darwin.apple_sdk.frameworks.CFNetwork
+        ];
+
+        # Note have to do this impurely as we end up missing symbols due to cgo nonsense
+        NIX_LDFLAGS = lib.optionalString stdenv.isDarwin "-framework CoreServices -framework Foundation -framework CFNetwork";
+        # CGO_ENABLED = lib.optional stdenv.isDarwin "1";
+
+        # No worky...
+        # preConfigure = lib.optionalString stdenv.isDarwin ''
+        #   export NIX_LDFLAGS="-F${darwin.apple_sdk.frameworks.CFNetwork}/Library/Frameworks -framework CFNetwork -F${darwin.apple_sdk.frameworks.CoreFoundation}/Library/Frameworks -framework CoreFoundation -F${darwin.apple_sdk.frameworks.CoreServices}/Library/Frameworks -framework CoreServices $NIX_LDFLAGS"
+        # '';
+
         meta.mainProgram = "weed";
 
-        passthru.tests.version = p.testVersion { package = seaweedfs; command = "weed version"; };
+        passthru.tests.version = testVersion { package = seaweedfs; command = "weed version"; };
 
         latest = "curl --silent 'https://api.github.com/repos/chrislusf/seaweedfs/releases/latest' | jq -r '.tag_name'";
       };
