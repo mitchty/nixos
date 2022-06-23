@@ -19,7 +19,7 @@
       p = nixpkgs.legacyPackages.${system};
       u = unstable.legacyPackages.${system};
 
-      fake = pkgs.legacyPackages.${system}.lib.fakeSha256;
+      fake = nixpkgs.legacyPackages.${system}.lib.fakeSha256;
 
       # Silly wrapper around fetchurl
       extra = fname: sha256: from: pkgs.fetchurl rec {
