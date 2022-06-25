@@ -46,8 +46,4 @@ if [[ "${curr}" != "${latest}" ]]; then
   printf "change curr to: %s\n" "${latest}"
 fi
 
-if [ "${ok}" = 0 ]; then
-  printf "nothing new\n" >&2
-fi
-
 exit $ok

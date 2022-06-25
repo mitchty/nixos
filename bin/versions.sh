@@ -25,8 +25,4 @@ for pkg in seaweedfs hwatch bottom jira-cli; do
   fi
 done
 
-if [ "${ok}" = 0 ]; then
-  printf "everything is up to date\n"
-fi
-
 exit $ok
