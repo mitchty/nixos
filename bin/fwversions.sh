@@ -1,14 +1,14 @@
 #!/usr/bin/env nix-shell
 #!nix-shell -i bash -p bash coreutils puppeteer-cli python310Packages.pdfx
 #-*-mode: Shell-script; coding: utf-8;-*-
-# File: fwversions.sh
-# Copyright: 2022 Mitchell Tishmack
+# SPDX-License-Identifier: BlueOak-1.0.0
 # Description: Check for updates to firmware for crap I own, none of this shell
 # is pretty, just functional enough to get the job done.
 _base=$(basename "$0")
 _dir=$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P || exit 126)
 export _base _dir
-set -eu
+
+set "${SETOPTS:--eu}"
 
 ok=0
 
@@ -25,13 +25,7 @@ trap cleanup EXIT
 
 cd "${T}"
 
-popts="https://tascam.com/us/product/mixcast_4/download test.pdf"
-
-# Running through github actions runs as root, so we need to add --no-sandbox
-# for puppeteer to work I guess.
-if [ $(id -u) -eq 0 ]; then
-  popts="--no-sandbox ${popts}"
-fi
+popts="--no-sandbox https://tascam.com/us/product/mixcast_4/download test.pdf"
 
 puppeteer print ${popts} > /dev/null 2>&1
 
