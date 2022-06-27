@@ -16,8 +16,8 @@
           (import rust)
         ];
       };
-      p = nixpkgs.legacyPackages.${system};
-      u = unstable.legacyPackages.${system};
+      stable = nixpkgs.legacyPackages.${system};
+      yolo = unstable.legacyPackages.${system};
 
       fake = nixpkgs.legacyPackages.${system}.lib.fakeSha256;
 
@@ -94,11 +94,11 @@
       };
 
       # https://github.com/ClementTsang/bottom
-      bottom = p.rustPlatform.buildRustPackage rec {
+      bottom = with stable; rustPlatform.buildRustPackage rec {
         pname = "bottom";
         version = "0.6.8";
 
-        src = p.fetchFromGitHub {
+        src = fetchFromGitHub {
           owner = "ClementTsang";
           repo = pname;
           rev = version;
@@ -106,16 +106,16 @@
         };
 
         # Macos needs a few Core system libraries
-        buildInputs = p.lib.optionals p.stdenv.isDarwin [
-          p.darwin.apple_sdk.frameworks.DiskArbitration
-          p.darwin.apple_sdk.frameworks.Foundation
+        buildInputs = lib.optionals stdenv.isDarwin [
+          darwin.apple_sdk.frameworks.DiskArbitration
+          darwin.apple_sdk.frameworks.Foundation
         ];
 
         cargoSha256 = "sha256-GMG6YBm/jA5D7wxC2gczMn/6Lkqiq/toSPNf86kgOys=";
 
         meta.mainProgram = "btm";
 
-        passthru.tests.version = p.testVersion { package = bottom; };
+        passthru.tests.version = testVersion { package = bottom; };
 
         latest = "curl --silent 'https://api.github.com/repos/ClementTsang/bottom/releases/latest' | jq -r '.tag_name'";
       };
@@ -124,7 +124,7 @@
       # Like minio...ish
       # TODO: Get this building again on macos, some weird cgo things going on with go-ieproxy
       # Leaving not working efforts inline for future me to know what doesn't work.
-      seaweedfs = with unstable.legacyPackages.${system}; buildGo118Module rec {
+      seaweedfs = with stable; buildGo118Module rec {
         oname = "chrislusf";
         pname = "seaweedfs";
         version = "3.12";
@@ -149,9 +149,9 @@
         # CFNetwork for this new dep:
         # https://github.com/mattn/go-ieproxy/blob/master/ieproxy_darwin.go#L3-L8
         buildInputs = lib.optionals stdenv.isDarwin [
-          p.darwin.apple_sdk.frameworks.CoreServices
-          p.darwin.apple_sdk.frameworks.Foundation
-          p.darwin.apple_sdk.frameworks.CFNetwork
+          darwin.apple_sdk.frameworks.CoreServices
+          darwin.apple_sdk.frameworks.Foundation
+          darwin.apple_sdk.frameworks.CFNetwork
         ];
 
         # Note have to do this impurely as we end up missing symbols due to cgo nonsense
@@ -170,12 +170,12 @@
         latest = "curl --silent 'https://api.github.com/repos/chrislusf/seaweedfs/releases/latest' | jq -r '.tag_name'";
       };
 
-      jira-cli = u.buildGo118Module rec {
+      jira-cli = with stable; buildGo118Module rec {
         oname = "ankitpokhrel";
         pname = "jira-cli";
         version = "v0.3.0";
 
-        src = p.fetchFromGitHub {
+        src = fetchFromGitHub {
           owner = oname;
           repo = pname;
           rev = version;
@@ -198,7 +198,7 @@
 
         meta.mainProgram = "jira";
 
-        passthru.tests.version = p.testVersion { package = jira-cli; };
+        passthru.tests.version = testVersion { package = jira-cli; };
 
         latest = "curl --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name'";
       };
@@ -216,11 +216,11 @@
       #
       # TODO: Figure out if its better to just build janus-gateway here with these overrides or not:
       # https://github.com/pikvm/packages/blob/fa1982ec7db49ee66a5429919738cd9e0c16587b/packages/janus-gateway-pikvm/PKGBUILD#L57-L65
-      kvmd = p.python310.pkgs.buildPythonPackage rec {
+      kvmd = with stable; python310.pkgs.buildPythonPackage rec {
         pname = "kvmd";
         version = "3.56";
 
-        src = p.fetchFromGitHub {
+        src = fetchFromGitHub {
           sha256 = "sha256-D+Dyg9tjjrTvBlLRBOnJKUc2/RT5zJFdqldY/RaSpzU=";
           rev = "v3.56";
           owner = "pikvm";
@@ -245,7 +245,7 @@
         ];
       };
       ttyd_html_h = (extra "html.h" "sha256-MJE14kSSsvoFrUNGVKYOBfE9zCwBhtpAzQSRWzmZR6s=" "https://raw.githubusercontent.com/pikvm/packages/master/packages/ttyd/html.h");
-      ttyd = (with pkgs; stdenv.mkDerivation {
+      ttyd = (with pkgs; stdenv.mkDerivation rec {
         pname = "ttyd";
         version = "1.6.3";
 
@@ -322,7 +322,7 @@
       ustreamer = (with pkgs; stdenv.mkDerivation {
         pname = "ustreamer";
         version = "4.13";
-        src = p.fetchFromGitHub {
+        src = fetchFromGitHub {
           owner = "pikvm";
           repo = "ustreamer";
           rev = "v4.13";
