@@ -64,29 +64,22 @@
         rustc = rust-bin.stable.latest.minimal;
       }).buildRustPackage rec {
         pname = "hwatch";
-        version = "0.3.6";
+        version = "0.3.7";
 
         src = fetchFromGitHub {
           owner = "blacknon";
           repo = pname;
           rev = version;
-          sha256 = "sha256-uaAgA6DWwYVT9mQh55onW+qxIC2i9GVuimctTJpUgfA=";
+          sha256 = "sha256-FVqvwqsHkV/yK5okL1p6TiNUGDK2ZnzVNO4UDVkG+zM=";
           forceFetchGit = true;
         };
 
-        # Update via:
-        # gi blacknon/hwatch
-        # git fetch
-        # git co $version
-        # cargo update
-        # git add -f Cargo.lock
-        # git diff --cached > ~/src/pub/github.com/mitchty/nixos/patches/hwatch-add-cargo-lock.patch
-        # fill out new cargosha256 and cross fingies
+        # Update via regenpatches
         cargoPatches = [
           ./patches/hwatch-add-cargo-lock.patch
         ];
 
-        cargoSha256 = "sha256-Xt3Z6ax3Y45KZhTYMBr/Rfx1o+ZAoPYj51SN5hnrXQM=";
+        cargoSha256 = "sha256-kfn7iOREFVS9LttfeRu+z5tXCheg54+tYozTsteFOX0=";
 
         passthru.tests.version = testVersion { package = hwatch; };
 
