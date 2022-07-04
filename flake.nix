@@ -166,13 +166,13 @@
       jira-cli = with stable; buildGo118Module rec {
         oname = "ankitpokhrel";
         pname = "jira-cli";
-        version = "v0.3.0";
+        version = "v1.0.0";
 
         src = fetchFromGitHub {
           owner = oname;
           repo = pname;
           rev = version;
-          sha256 = "sha256-sPoFv3Gzue5H6TJuQZJvqB/Dx/URp9Kt2UuIvKSnAxg=";
+          sha256 = "sha256-+WkeiB4vgKxlVNnd5cEMmE9EYcGAqrzIrLsvPAA1eOE=";
         };
 
         # For a rather contrived test in the test suite that uses this...
@@ -187,7 +187,7 @@
           substituteInPlace pkg/tui/helper_test.go --replace "TestGetPager" "SkipTestGetPager"
         '';
 
-        vendorSha256 = "sha256-UO30/D65vpu3PgEsfSDL3nYgkwo5Cj+1WKiokk7KKKg=";
+        vendorSha256 = "sha256-SpUggA9u8OGV2zF3EQ0CB8M6jpiVQi957UGaN+foEuk=";
 
         meta.mainProgram = "jira";
 
