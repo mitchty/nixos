@@ -83,7 +83,7 @@
 
         passthru.tests.version = testVersion { package = hwatch; };
 
-        latest = "curl --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
+        latest = "curl --location --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
       };
 
       # https://github.com/ClementTsang/bottom
@@ -110,7 +110,7 @@
 
         passthru.tests.version = testVersion { package = bottom; };
 
-        latest = "curl --silent 'https://api.github.com/repos/ClementTsang/bottom/releases/latest' | jq -r '.tag_name'";
+        latest = "curl --location --silent 'https://api.github.com/repos/ClementTsang/bottom/releases/latest' | jq -r '.tag_name'";
       };
 
       # Go packages
@@ -160,7 +160,7 @@
 
         passthru.tests.version = testVersion { package = seaweedfs; command = "weed version"; };
 
-        latest = "curl --silent 'https://api.github.com/repos/chrislusf/seaweedfs/releases/latest' | jq -r '.tag_name'";
+        latest = "curl --location --silent 'https://api.github.com/repos/chrislusf/seaweedfs/releases/latest' | jq -r '.tag_name'";
       };
 
       jira-cli = with stable; buildGo118Module rec {
@@ -193,7 +193,7 @@
 
         passthru.tests.version = testVersion { package = jira-cli; };
 
-        latest = "curl --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name'";
+        latest = "curl --location --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name'";
       };
 
       # PiKVM related (incomplete)
