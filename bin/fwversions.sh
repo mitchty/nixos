@@ -29,7 +29,7 @@ popts="--no-sandbox https://tascam.com/us/product/mixcast_4/download test.pdf"
 
 puppeteer print ${popts} > /dev/null 2>&1
 
-curr="https://tascam.com/downloads/products/tascam/mixcast_4/mixcast4_fw_v121.zip"
+curr="https://tascam.com/downloads/products/tascam/mixcast_4/mixcast4_fw_v130.zip"
 latest=$(pdfx -v test.pdf | grep -E '(mixcast_4.*_fw_.*.zip)' | sort -ur | head -n1 | awk '{print $2}')
 
 if [[ "${curr}" != "${latest}" ]]; then
