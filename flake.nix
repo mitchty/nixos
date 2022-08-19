@@ -166,13 +166,13 @@
       jira-cli = with stable; buildGo118Module rec {
         oname = "ankitpokhrel";
         pname = "jira-cli";
-        version = "v1.0.0";
+        version = "v1.1.0";
 
         src = fetchFromGitHub {
           owner = oname;
           repo = pname;
           rev = version;
-          sha256 = "sha256-+WkeiB4vgKxlVNnd5cEMmE9EYcGAqrzIrLsvPAA1eOE=";
+          sha256 = "sha256-UpDaKg6TA1qCkbzF7BARtj+tAyuCCGAyqOdItZU64Ls=";
         };
 
         # For a rather contrived test in the test suite that uses this...
