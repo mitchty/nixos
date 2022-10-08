@@ -1,5 +1,5 @@
 {
-  description = "My out of band flakes/pkgs/modules for NixOS";
+  description = "My out of band flakes/pkgs/modules for NixOS/Darwin";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
@@ -8,6 +8,7 @@
     rust.url = "github:oxalica/rust-overlay";
   };
 
+  # TODO: Future me, nuke flake-utils
   outputs = { nixpkgs, unstable, flake-utils, rust, ... }: flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = import nixpkgs {
@@ -295,21 +296,52 @@
     rec {
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
       # updates most often first.
-      packages = flake-utils.lib.flattenTree {
+      packages = (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { pkgs = stable; };
+        stats = pkgs.callPackage ./pkgs/stats.nix { pkgs = stable; };
+        stretchly = pkgs.callPackage ./pkgs/stretchly.nix { pkgs = stable; };
+        swiftbar = pkgs.callPackage ./pkgs/swiftbar.nix { pkgs = stable; };
+        wireshark = pkgs.callPackage ./pkgs/wireshark.nix { pkgs = stable; };
+        vlc = pkgs.callPackage ./pkgs/vlc.nix { pkgs = stable; };
+      }) // (pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
         seaweedfs = pkgs.callPackage ./pkgs/seaweedfs.nix { inherit stable; };
-        inherit watchdog;
-        inherit ustreamer;
+
+        # kvm related TODO stuff, most likely old
+        inherit kvmd;
         inherit ttyd;
+        inherit ustreamer;
+        inherit watchdog;
+      }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
+        hponcfg = pkgs.callPackage ./pkgs/hponcfg.nix { fetchurl = pkgs.fetchurl; rpmextract = stable.rpmextract; openssl = pkgs.openssl; busybox = pkgs.busybox; autoPatchelfHook = pkgs.autoPatchelfHook; makeWrapper = pkgs.makeWrapper; };
+      }) // flake-utils.lib.flattenTree {
         inherit jira-cli;
         inherit hwatch;
         inherit bottom;
-        inherit kvmd;
         inherit hatools;
 
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
           buildInputs = [
+            bottom
+            hatools
+            hwatch
+            jira-cli
+          ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
+            packages.obs-studio
+            packages.stats
+            packages.stretchly
+            packages.swiftbar
+            packages.wireshark
+            packages.vlc
+          ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
             packages.seaweedfs
+
+            kvmd
+            ttyd
+            ustreamer
+            watchdog
+          ] ++ pkgs.lib.optionals (system == "x86_64-linux") [
+            packages.hponcfg
           ];
 
           src = ./.;
@@ -322,26 +354,53 @@
         };
       };
 
-      apps = {
+      apps = { } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
+        stats = flake-utils.lib.mkApp { drv = packages.stats; };
+        stretchly = flake-utils.lib.mkApp { drv = packages.stretchly; };
+        swiftbar = flake-utils.lib.mkApp { drv = packages.swiftbar; };
+        wireshark = flake-utils.lib.mkApp { drv = packages.wireshark; };
+        vlc = flake-utils.lib.mkApp { drv = packages.vlc; };
+      }) // (pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
         seaweedfs = flake-utils.lib.mkApp { drv = packages.seaweedfs; };
-      };
+      }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
+        hponcfg = flake-utils.lib.mkApp { drv = packages.hponcfg; };
+      });
 
       defaultApp = flake-utils.lib.mkApp {
         drv = packages.default;
       };
 
+      # TODO: This is deprecated according to nix flake check replace at some point.
       devShell = pkgs.mkShell {
+        # Macos only stuff is mostly just diskimages no devShell shenanigans
+        # needed.
         buildInputs = [
+          bottom
+          hatools
+          hwatch
+          jira-cli
+        ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
           packages.seaweedfs
+
+          kvmd
+          ttyd
           ustreamer
           watchdog
-          ttyd
-          jira-cli
-          hwatch
-          bottom
-          kvmd
-          hatools
+        ] ++ pkgs.lib.optionals (system == "x86_64-linux") [
+          packages.hponcfg
         ];
+      };
+      checks = {
+        nixpkgs-fmt = pkgs.runCommand "check-nix-format" { } ''
+          ${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt --check ${./.}
+          install -dm755 $out
+        '';
+        versions = pkgs.runCommand "check-versions" { } ''
+          export PATH="${nixpkgs.lib.makeBinPath [pkgs.coreutils pkgs.curl pkgs.jq pkgs.htmlq]}:$PATH"
+          ${builtins.readFile ./bin/versions}
+          install -dm755 $out
+        '';
       };
     }
   );
