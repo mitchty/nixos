@@ -295,21 +295,39 @@
     rec {
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
       # updates most often first.
-      packages = flake-utils.lib.flattenTree {
+      packages = (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        obs = pkgs.callPackage ./pkgs/obs.nix { pkgs = stable; };
+      }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
         seaweedfs = pkgs.callPackage ./pkgs/seaweedfs.nix { inherit stable; };
-        inherit watchdog;
-        inherit ustreamer;
+        hponcfg = pkgs.callPackage ./pkgs/hponcfg.nix { fetchurl = pkgs.fetchurl; rpmextract = stable.rpmextract; openssl = pkgs.openssl; busybox = pkgs.busybox; autoPatchelfHook = pkgs.autoPatchelfHook; makeWrapper = pkgs.makeWrapper; };
+
+        # kvm related TODO stuff, most likely old
+        inherit kvmd;
         inherit ttyd;
+        inherit ustreamer;
+        inherit watchdog;
+      }) // flake-utils.lib.flattenTree {
         inherit jira-cli;
         inherit hwatch;
         inherit bottom;
-        inherit kvmd;
         inherit hatools;
 
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
           buildInputs = [
+            bottom
+            hatools
+            hwatch
+            jira-cli
+          ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+            packages.obs
+          ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
             packages.seaweedfs
+            packages.hponcfg
+            kvmd
+            ttyd
+            ustreamer
+            watchdog
           ];
 
           src = ./.;
@@ -322,26 +340,39 @@
         };
       };
 
-      apps = {
+      apps = { } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        obs = flake-utils.lib.mkApp { drv = packages.obs; };
+      }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
+        hponcfg = flake-utils.lib.mkApp { drv = packages.hponcfg; };
         seaweedfs = flake-utils.lib.mkApp { drv = packages.seaweedfs; };
-      };
+      });
 
       defaultApp = flake-utils.lib.mkApp {
         drv = packages.default;
       };
 
       devShell = pkgs.mkShell {
+        # Macos only stuff is mostly just diskimages no devShell shenanigans
+        # needed.
         buildInputs = [
+          bottom
+          hatools
+          hwatch
+          jira-cli
+        ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
           packages.seaweedfs
+          packages.hponcfg
+          kvmd
+          ttyd
           ustreamer
           watchdog
-          ttyd
-          jira-cli
-          hwatch
-          bottom
-          kvmd
-          hatools
         ];
+      };
+      checks = {
+        nixpkgs-fmt = pkgs.runCommand "check-nix-format" { } ''
+          ${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt --check ${./.}
+          install -dm755 $out
+        '';
       };
     }
   );
