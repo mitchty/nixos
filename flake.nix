@@ -301,8 +301,8 @@
         stats = pkgs.callPackage ./pkgs/stats.nix { pkgs = stable; };
         stretchly = pkgs.callPackage ./pkgs/stretchly.nix { pkgs = stable; };
         swiftbar = pkgs.callPackage ./pkgs/swiftbar.nix { pkgs = stable; };
-        wireshark = pkgs.callPackage ./pkgs/wireshark.nix { pkgs = stable; };
         vlc = pkgs.callPackage ./pkgs/vlc.nix { pkgs = stable; };
+        wireshark = pkgs.callPackage ./pkgs/wireshark.nix { pkgs = stable; };
       }) // (pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
         seaweedfs = pkgs.callPackage ./pkgs/seaweedfs.nix { inherit stable; };
 
@@ -331,8 +331,8 @@
             packages.stats
             packages.stretchly
             packages.swiftbar
-            packages.wireshark
             packages.vlc
+            packages.wireshark
           ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
             packages.seaweedfs
 
@@ -359,8 +359,8 @@
         stats = flake-utils.lib.mkApp { drv = packages.stats; };
         stretchly = flake-utils.lib.mkApp { drv = packages.stretchly; };
         swiftbar = flake-utils.lib.mkApp { drv = packages.swiftbar; };
-        wireshark = flake-utils.lib.mkApp { drv = packages.wireshark; };
         vlc = flake-utils.lib.mkApp { drv = packages.vlc; };
+        wireshark = flake-utils.lib.mkApp { drv = packages.wireshark; };
       }) // (pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
         seaweedfs = flake-utils.lib.mkApp { drv = packages.seaweedfs; };
       }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
@@ -380,6 +380,13 @@
           hatools
           hwatch
           jira-cli
+        ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+          packages.obs-studio
+          packages.stats
+          packages.stretchly
+          packages.swiftbar
+          packages.vlc
+          packages.wireshark
         ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
           packages.seaweedfs
 
