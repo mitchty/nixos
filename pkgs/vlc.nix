@@ -23,15 +23,14 @@ with pkgs; stdenv.mkDerivation rec {
   };
 
   latest = ''
+    ver=unknown
     for tag in $(curl --silent 'https://api.github.com/repos/videolan/vlc/git/refs/tags' | jq -r '.[].ref' | sed -e 's|refs/tags/||' | grep -Ev '(dev|rc|git|pre|test|svn)' | sort -Vr); do
       if curl --fail -L -I http://get.videolan.org/vlc/$tag/macosx/vlc-$tag-intel64.dmg > /dev/null 2>&1; then
-        printtf "%s" "$tag"
+        ver=$tag
         break
-      else
-        printf "note: newer VLC version tag %s found but not present for download\n" "$tag" >&2
-        printf "unknown"
       fi
     done
+    echo $tag
   '';
 
   meta = {
