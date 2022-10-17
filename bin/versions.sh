@@ -16,7 +16,7 @@ set -u
 ok=0
 
 # 2> /dev/null to nuke the stderr warning: messages
-for pkg in obs stats stretchly swiftbar wireshark vlc seaweedfs hwatch bottom jira-cli; do
+for pkg in obs stats stretchly swiftbar wireshark vlc seaweedfs hwatch bottom jira-cli transcrypt; do
   evalstring=$(nix eval --raw ".#${pkg}.latest" 2> /dev/null)
   latest=$(eval "${evalstring}")
   ours=$(nix eval --raw ".#${pkg}.version" 2> /dev/null)

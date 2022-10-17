@@ -47,4 +47,6 @@ stdenv.mkDerivation rec {
     maintainers = [ maintainers.elasticdog ];
     platforms = platforms.all;
   };
+
+  latest = "curl --location --silent 'https://api.github.com/repos/elasticdog/${pname}/releases/latest' | jq -r '.tag_name' | tr -d v";
 }
