@@ -1,0 +1,21 @@
+diff --git a/transcrypt b/transcrypt
+index 072b1c2..0ab9e82 100755
+--- a/transcrypt
++++ b/transcrypt
+@@ -499,6 +499,7 @@ save_helper_hooks() {
+ 	pre_commit_hook_installed="${GIT_HOOKS}/pre-commit-crypt"
+ 	cat <<-'EOF' >"$pre_commit_hook_installed"
+ 		#!/usr/bin/env bash
++		PATH="$(transcrypt-depspathprefix 2>/dev/null)$PATH"
+ 		# Transcrypt pre-commit hook: fail if secret file in staging lacks the magic prefix "Salted" in B64
+ 		RELATIVE_GIT_DIR=$(git rev-parse --git-dir 2>/dev/null || printf '')
+ 		CRYPT_DIR=$(git config transcrypt.crypt-dir 2>/dev/null || printf '%s/crypt' "${RELATIVE_GIT_DIR}")
+@@ -545,7 +546,7 @@ save_configuration() {
+ 	git config merge.crypt.name 'Merge transcrypt secret files'
+ 
+ 	# add a git alias for listing encrypted files
+-	git config alias.ls-crypt "!git -c core.quotePath=false ls-files | git -c core.quotePath=false check-attr --stdin filter | awk 'BEGIN { FS = \":\" }; /crypt$/{ print \$1 }'"
++	git config alias.ls-crypt "!PATH=\"\$(transcrypt-depspathprefix 2>/dev/null)\$PATH\"; git -c core.quotePath=false ls-files | git -c core.quotePath=false check-attr --stdin filter | awk 'BEGIN { FS = \":\" }; /crypt$/{ print \$1 }'"
+ }
+ 
+ # display the current configuration settings

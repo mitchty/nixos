@@ -296,7 +296,10 @@
     rec {
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
       # updates most often first.
-      packages = (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+      packages = {
+        # Upstream nixpkgs is ancient vendor it in and pr if its ok.
+        transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; };
+      } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { pkgs = stable; };
         stats = pkgs.callPackage ./pkgs/stats.nix { pkgs = stable; };
         stretchly = pkgs.callPackage ./pkgs/stretchly.nix { pkgs = stable; };
@@ -326,6 +329,7 @@
             hatools
             hwatch
             jira-cli
+            packages.transcrypt
           ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
             packages.obs-studio
             packages.stats
@@ -354,7 +358,13 @@
         };
       };
 
-      apps = { } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+      apps = {
+        bottom = flake-utils.lib.mkApp { drv = packages.bottom; };
+        hatools = flake-utils.lib.mkApp { drv = packages.hatools; };
+        hwatch = flake-utils.lib.mkApp { drv = packages.hwatch; };
+        jira-cli = flake-utils.lib.mkApp { drv = packages.jira-cli; };
+        transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
+      } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
         stats = flake-utils.lib.mkApp { drv = packages.stats; };
         stretchly = flake-utils.lib.mkApp { drv = packages.stretchly; };
@@ -380,6 +390,7 @@
           hatools
           hwatch
           jira-cli
+          packages.transcrypt
         ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
           packages.obs-studio
           packages.stats
