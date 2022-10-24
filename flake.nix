@@ -391,7 +391,7 @@
           hwatch
           jira-cli
           packages.transcrypt
-        ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+        ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
           packages.obs-studio
           packages.stats
           packages.stretchly
