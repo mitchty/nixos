@@ -5,7 +5,7 @@
 with pkgs; stdenv.mkDerivation rec {
   name = "swiftbar";
   gname = "SwiftBar";
-  version = "1.4.3";
+  version = "1.4.4";
 
   buildInputs = [ unzip ];
   sourceRoot = ".";
@@ -18,7 +18,7 @@ with pkgs; stdenv.mkDerivation rec {
   src = fetchurl {
     name = "${gname}.zip";
     url = "https://github.com/${name}/${gname}/releases/download/v${version}/${gname}.zip";
-    sha256 = "sha256-IP/lWahb0ouG912XvaWR3nDL1T3HrBZ2E8pp/WbHGgQ=";
+    sha256 = "sha256-BPRlq6q/egb451RYgkpVH1ouhdYL33P5VTmCX+5Z2FY=";
   };
 
   latest = "curl --silent 'https://api.github.com/repos/swiftbar/SwiftBar/releases/latest' | jq -r '.tag_name' | tr -d v";
