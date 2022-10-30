@@ -416,7 +416,7 @@
         '';
         versions = pkgs.runCommand "check-versions" { } ''
           export PATH="${nixpkgs.lib.makeBinPath [pkgs.coreutils pkgs.curl pkgs.jq pkgs.htmlq]}:$PATH"
-          ${builtins.readFile ./bin/versions}
+          DIR=${./.} sh ${./bin/versions}
           install -dm755 $out
         '';
       };
