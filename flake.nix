@@ -29,30 +29,6 @@
         inherit sha256;
       };
 
-      # Ye olde halockrun and hatimerun
-      hatools = (with pkgs; stdenv.mkDerivation rec {
-        oname = "fatalmind";
-        pname = "hatools";
-        version = "2.1.4";
-
-        src = fetchFromGitHub {
-          sha256 = "sha256-Pl5hbL7aHK261/ReQ7kmHyoEprjD/sOL9kFSXR2g4Ok=";
-          rev = "v2_14";
-          owner = oname;
-          repo = pname;
-        };
-
-        nativeBuildInputs = [
-          autoreconfHook
-          gnumake
-          gcc
-        ];
-
-        installPhase = ''
-          make install DESTDIR=""
-        '';
-      });
-
       # Rust packages
 
       # Testing out some watch related things, need to PR adding a Cargo.lock
@@ -320,13 +296,13 @@
         inherit jira-cli;
         inherit hwatch;
         inherit bottom;
-        inherit hatools;
+        hatools = pkgs.callPackage ./pkgs/hatools.nix { pkgs = stable; };
 
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
           buildInputs = [
             bottom
-            hatools
+            packages.hatools
             hwatch
             jira-cli
             packages.transcrypt
@@ -387,7 +363,7 @@
         # needed.
         buildInputs = [
           bottom
-          hatools
+          packages.hatools
           hwatch
           jira-cli
           packages.transcrypt
