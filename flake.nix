@@ -297,6 +297,7 @@
         inherit hwatch;
         inherit bottom;
         hatools = pkgs.callPackage ./pkgs/hatools.nix { pkgs = stable; };
+        xq = pkgs.callPackage ./pkgs/xq.nix { pkgs = stable; };
 
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
@@ -306,6 +307,7 @@
             hwatch
             jira-cli
             packages.transcrypt
+            packages.xq
           ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
             packages.obs-studio
             packages.stats
@@ -340,6 +342,7 @@
         hwatch = flake-utils.lib.mkApp { drv = packages.hwatch; };
         jira-cli = flake-utils.lib.mkApp { drv = packages.jira-cli; };
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
+        xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
         stats = flake-utils.lib.mkApp { drv = packages.stats; };
@@ -367,6 +370,7 @@
           hwatch
           jira-cli
           packages.transcrypt
+          packages.xq
         ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
           packages.obs-studio
           packages.stats
