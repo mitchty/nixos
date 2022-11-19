@@ -24,5 +24,5 @@ with pkgs; buildGo118Module rec {
 
   passthru.tests.version = testVersion { package = xq; command = "xq version"; };
 
-  latest = "curl --location --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name'";
+  latest = "curl --location --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name' | tr -d v";
 }
