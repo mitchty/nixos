@@ -276,6 +276,7 @@
         # Upstream nixpkgs is ancient vendor it in and pr if its ok.
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        nheko = pkgs.callPackage ./pkgs/nheko.nix { pkgs = stable; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { pkgs = stable; };
         stats = pkgs.callPackage ./pkgs/stats.nix { pkgs = stable; };
         stretchly = pkgs.callPackage ./pkgs/stretchly.nix { pkgs = stable; };
@@ -309,6 +310,7 @@
             packages.transcrypt
             packages.xq
           ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
+            packages.nheko
             packages.obs-studio
             packages.stats
             packages.stretchly
@@ -344,6 +346,7 @@
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
         xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        nheko = flake-utils.lib.mkApp { drv = packages.nheko; };
         obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
         stats = flake-utils.lib.mkApp { drv = packages.stats; };
         stretchly = flake-utils.lib.mkApp { drv = packages.stretchly; };
@@ -372,6 +375,7 @@
           packages.transcrypt
           packages.xq
         ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
+          packages.nheko
           packages.obs-studio
           packages.stats
           packages.stretchly
