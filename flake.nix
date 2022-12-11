@@ -284,8 +284,6 @@
         vlc = pkgs.callPackage ./pkgs/vlc.nix { pkgs = stable; };
         wireshark = pkgs.callPackage ./pkgs/wireshark.nix { pkgs = stable; };
       }) // (pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-        seaweedfs = pkgs.callPackage ./pkgs/seaweedfs.nix { inherit stable; };
-
         # kvm related TODO stuff, most likely old
         inherit kvmd;
         inherit ttyd;
@@ -318,8 +316,6 @@
             packages.vlc
             packages.wireshark
           ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
-            packages.seaweedfs
-
             kvmd
             ttyd
             ustreamer
@@ -353,8 +349,6 @@
         swiftbar = flake-utils.lib.mkApp { drv = packages.swiftbar; };
         vlc = flake-utils.lib.mkApp { drv = packages.vlc; };
         wireshark = flake-utils.lib.mkApp { drv = packages.wireshark; };
-      }) // (pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-        seaweedfs = flake-utils.lib.mkApp { drv = packages.seaweedfs; };
       }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
         hponcfg = flake-utils.lib.mkApp { drv = packages.hponcfg; };
       });
@@ -383,8 +377,6 @@
           packages.vlc
           packages.wireshark
         ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
-          packages.seaweedfs
-
           kvmd
           ttyd
           ustreamer
