@@ -6,7 +6,7 @@ with pkgs; stdenv.mkDerivation rec {
   name = "vlc";
   uname = "videolan";
   aname = "VLC";
-  version = "3.0.17.3";
+  version = "3.0.18";
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
@@ -19,7 +19,7 @@ with pkgs; stdenv.mkDerivation rec {
   src = fetchurl {
     name = "${aname}.dmg";
     url = "http://get.videolan.org/${name}/${version}/macosx/${name}-${version}-intel64.dmg";
-    sha256 = "sha256-zKJn8sUa5WjgLztNimrbqHsr3l8BGiuHxZXBAtifEdg=";
+    sha256 = "sha256-iO3N/Os70vaANn2QCdOKDBR/p1jy3TleQ0EsHgjOHMs=";
   };
 
   latest = ''
