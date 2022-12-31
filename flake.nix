@@ -95,13 +95,13 @@
       jira-cli = with stable; buildGo118Module rec {
         oname = "ankitpokhrel";
         pname = "jira-cli";
-        version = "v1.1.0";
+        version = "1.2.0";
 
         src = fetchFromGitHub {
           owner = oname;
           repo = pname;
-          rev = version;
-          sha256 = "sha256-UpDaKg6TA1qCkbzF7BARtj+tAyuCCGAyqOdItZU64Ls=";
+          rev = "v${version}";
+          sha256 = "sha256-ruFSqD/QLIK69hx9lNulWjyXVJzGACmghAU4fFEgEJo=";
         };
 
         # For a rather contrived test in the test suite that uses this...
@@ -116,13 +116,15 @@
           substituteInPlace pkg/tui/helper_test.go --replace "TestGetPager" "SkipTestGetPager"
         '';
 
+        nativeBuildInputs = [ pkgs.less ];
+
         vendorSha256 = "sha256-SpUggA9u8OGV2zF3EQ0CB8M6jpiVQi957UGaN+foEuk=";
 
         meta.mainProgram = "jira";
 
         passthru.tests.version = testVersion { package = jira-cli; };
 
-        latest = "curl --location --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name'";
+        latest = "curl --location --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name' | tr -d v";
       };
 
       # PiKVM related (incomplete)
