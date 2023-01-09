@@ -6,7 +6,7 @@ with pkgs; stdenv.mkDerivation rec {
   name = "obs-studio";
   uname = "obsproject";
   aname = "OBS";
-  version = "28.1.2";
+  version = "29.0.0";
 
   sourceRoot = ".";
   phases = [ "installPhase" ];
@@ -21,7 +21,7 @@ with pkgs; stdenv.mkDerivation rec {
     name = "${aname}.dmg";
     # As of obs 28.0.0 this disk image is now APFS and not HFS, so undmg no worky
     url = "https://github.com/${uname}/${name}/releases/download/${version}/obs-studio-${version}-macos-x86_64.dmg";
-    sha256 = "sha256-z17bem4nwULnD32vBaSNWa03e2rtKFsPnk71i9qtJnQ=";
+    sha256 = "sha256-bo60UdItZsfgbN/Nm5XgzpH1lZlPArYxnYdr0+5YN3A=";
   };
 
   latest = "curl --silent 'https://api.github.com/repos/obsproject/obs-studio/releases/latest' | jq -r '.tag_name'";
