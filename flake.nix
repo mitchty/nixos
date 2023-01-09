@@ -63,33 +63,6 @@
         latest = "curl --location --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
       };
 
-      # https://github.com/ClementTsang/bottom
-      bottom = with stable; rustPlatform.buildRustPackage rec {
-        pname = "bottom";
-        version = "0.6.8";
-
-        src = fetchFromGitHub {
-          owner = "ClementTsang";
-          repo = pname;
-          rev = version;
-          sha256 = "sha256-zmiYVLaXKHH+MObO75wOiGkDetKy4bVLe7IAqiO2ER8=";
-        };
-
-        # Macos needs a few Core system libraries
-        buildInputs = lib.optionals stdenv.isDarwin [
-          darwin.apple_sdk.frameworks.DiskArbitration
-          darwin.apple_sdk.frameworks.Foundation
-        ];
-
-        cargoSha256 = "sha256-GMG6YBm/jA5D7wxC2gczMn/6Lkqiq/toSPNf86kgOys=";
-
-        meta.mainProgram = "btm";
-
-        passthru.tests.version = testVersion { package = bottom; };
-
-        latest = "curl --location --silent 'https://api.github.com/repos/ClementTsang/bottom/releases/latest' | jq -r '.tag_name'";
-      };
-
       # Go packages
 
       jira-cli = with stable; buildGo118Module rec {
@@ -296,14 +269,12 @@
       }) // flake-utils.lib.flattenTree {
         inherit jira-cli;
         inherit hwatch;
-        inherit bottom;
         hatools = pkgs.callPackage ./pkgs/hatools.nix { pkgs = stable; };
         xq = pkgs.callPackage ./pkgs/xq.nix { pkgs = stable; };
 
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
           buildInputs = [
-            bottom
             packages.hatools
             hwatch
             jira-cli
@@ -337,7 +308,6 @@
       };
 
       apps = {
-        bottom = flake-utils.lib.mkApp { drv = packages.bottom; };
         hatools = flake-utils.lib.mkApp { drv = packages.hatools; };
         hwatch = flake-utils.lib.mkApp { drv = packages.hwatch; };
         jira-cli = flake-utils.lib.mkApp { drv = packages.jira-cli; };
@@ -364,7 +334,6 @@
         # Macos only stuff is mostly just diskimages no devShell shenanigans
         # needed.
         buildInputs = [
-          bottom
           packages.hatools
           hwatch
           jira-cli
