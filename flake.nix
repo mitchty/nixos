@@ -41,13 +41,13 @@
         rustc = rust-bin.stable.latest.minimal;
       }).buildRustPackage rec {
         pname = "hwatch";
-        version = "0.3.7";
+        version = "0.3.9";
 
         src = fetchFromGitHub {
           owner = "blacknon";
           repo = pname;
           rev = version;
-          sha256 = "sha256-FVqvwqsHkV/yK5okL1p6TiNUGDK2ZnzVNO4UDVkG+zM=";
+          sha256 = "sha256-O+qKVRPDn7y8JEAF75P6suH4hOfPLjWSNTDGX2V5z3w=";
           forceFetchGit = true;
         };
 
@@ -56,7 +56,7 @@
           ./patches/hwatch-add-cargo-lock.patch
         ];
 
-        cargoSha256 = "sha256-kfn7iOREFVS9LttfeRu+z5tXCheg54+tYozTsteFOX0=";
+        cargoSha256 = "sha256-fO+80nAwSnFsNM/81qLWN2YU55Lk4SKbLpSBQS0WJUo=";
 
         passthru.tests.version = testVersion { package = hwatch; };
 
