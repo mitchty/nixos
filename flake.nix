@@ -68,13 +68,13 @@
       jira-cli = with stable; buildGo118Module rec {
         oname = "ankitpokhrel";
         pname = "jira-cli";
-        version = "1.2.0";
+        version = "1.3.0";
 
         src = fetchFromGitHub {
           owner = oname;
           repo = pname;
           rev = "v${version}";
-          sha256 = "sha256-ruFSqD/QLIK69hx9lNulWjyXVJzGACmghAU4fFEgEJo=";
+          sha256 = "sha256-T7EAlHHjoACJOra47zp5tXrkYWQ8o9Qame6QmiTrIXY=";
         };
 
         # For a rather contrived test in the test suite that uses this...
@@ -91,7 +91,7 @@
 
         nativeBuildInputs = [ pkgs.less ];
 
-        vendorSha256 = "sha256-SpUggA9u8OGV2zF3EQ0CB8M6jpiVQi957UGaN+foEuk=";
+        vendorSha256 = "sha256-b/z2oSWY33XSxpHi+Tit2ThnNrdk5QNI4oZWPMBKmd0=";
 
         meta.mainProgram = "jira";
 
