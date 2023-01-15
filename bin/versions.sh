@@ -25,7 +25,8 @@ for pkg in nheko obs-studio stats stretchly swiftbar wireshark vlc hwatch jira-c
     ours=$(nix eval --raw ".#${pkg}.version" 2> /dev/null)
     if [ "$?" -eq 0 ]; then
       if [ "${latest}" != "${ours}" ]; then
-        printf "%s latest version out of date: latest=%s ours=%s\n" "${pkg}" "${latest}" "${ours}"
+        printf "%s latest version out of date: latest=%s ours=%s\n" "${pkg}" "${latest}" "${ours}" >&2
+        printf "nix run github:MiC92/nix-update -- --flake %s --version %s\n" "${pkg}" "${latest}"
         ok=$((ok + 1))
       fi
     fi
