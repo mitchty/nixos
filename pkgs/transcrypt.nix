@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "transcrypt";
-  version = "2.2.0";
+  version = "2.2.1";
 
   src = fetchFromGitHub {
     owner = "elasticdog";
     repo = "transcrypt";
     rev = "v${version}";
-    sha256 = "sha256-ZGdHoZFVLBXsQX46mMhreCrAboFYVuW7hNIJXjOjpWU=";
+    sha256 = "sha256-PqKc4Nnp3qn80ETznX8Ud8D/MqU0ucQSLntVQUD78Yo=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
