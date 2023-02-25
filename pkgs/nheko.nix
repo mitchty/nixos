@@ -6,7 +6,7 @@ with pkgs; stdenv.mkDerivation rec {
   name = "nheko";
   uname = "Nheko-Reborn";
   aname = "Nheko";
-  version = "0.11.1";
+  version = "0.11.3";
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
@@ -19,7 +19,7 @@ with pkgs; stdenv.mkDerivation rec {
   src = fetchurl {
     name = "${aname}.dmg";
     url = "https://github.com/${uname}/${name}/releases/download/v${version}/${name}-v${version}-intel.dmg";
-    sha256 = "sha256-iizRHY8I/aN1qxoXpFGHzHQHNIjtyN6BVRNYslNT9y4=";
+    sha256 = "sha256-NXbmqU5sqtVKrdu3FDbeityRnezLVxryvtPIcbYwpDA=";
   };
 
   latest = "curl --silent 'https://api.github.com/repos/${uname}/${name}/releases/latest' | jq -r '.tag_name' | tr -d v";
