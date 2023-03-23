@@ -18,9 +18,11 @@ rec {
 
   ldflags = [ "-s" "-w" ];
 
-  # NOTE: Remove the install and upgrade hooks.
+  # Remove the plugin hooks we don't need em, change the binary to what the go
+  # cmd build produces instead of whatever this default is.
   postPatch = ''
     sed -i '/^hooks:/,+2 d' plugin.yaml
+    substituteInPlace plugin.yaml --replace untt bin/${pname}
   '';
 
   postInstall = ''
