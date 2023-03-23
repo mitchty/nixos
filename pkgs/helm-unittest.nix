@@ -18,6 +18,17 @@ rec {
 
   ldflags = [ "-s" "-w" ];
 
+  # NOTE: Remove the install and upgrade hooks.
+  postPatch = ''
+    sed -i '/^hooks:/,+2 d' plugin.yaml
+  '';
+
+  postInstall = ''
+    install -dm755 $out/${pname}
+    mv $out/bin $out/${pname}/
+    install -m644 -Dt $out/${pname} plugin.yaml
+  '';
+
   meta = with pkgs.lib; {
     description = "BDD styled unit test framework for Kubernetes Helm charts as a Helm plugin";
     homepage = "https://github.com/helm-unittest/helm-unittest";
