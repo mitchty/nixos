@@ -63,43 +63,6 @@
         latest = "curl --location --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
       };
 
-      # Go packages
-
-      jira-cli = with stable; buildGo118Module rec {
-        oname = "ankitpokhrel";
-        pname = "jira-cli";
-        version = "1.3.0";
-
-        src = fetchFromGitHub {
-          owner = oname;
-          repo = pname;
-          rev = "v${version}";
-          sha256 = "sha256-T7EAlHHjoACJOra47zp5tXrkYWQ8o9Qame6QmiTrIXY=";
-        };
-
-        # For a rather contrived test in the test suite that uses this...
-        # https://github.com/ankitpokhrel/jira-cli/blob/55d0d33dc0879c743445451b5c22e69c06383a16/pkg/tui/helper.go#L58
-        # But that function mixes up runtime configuration assumptions (e.g.
-        # less/more etc..) exist at runtime with what its testing:
-        # https://github.com/ankitpokhrel/jira-cli/blob/main/pkg/tui/helper_test.go#L89-L101
-        #
-        # Instead of bothering trying to make an environment that will conform
-        # to its expectations just skip testing the pager stuff.
-        postPatch = ''
-          substituteInPlace pkg/tui/helper_test.go --replace "TestGetPager" "SkipTestGetPager"
-        '';
-
-        nativeBuildInputs = [ pkgs.less ];
-
-        vendorSha256 = "sha256-b/z2oSWY33XSxpHi+Tit2ThnNrdk5QNI4oZWPMBKmd0=";
-
-        meta.mainProgram = "jira";
-
-        passthru.tests.version = testVersion { package = jira-cli; };
-
-        latest = "curl --location --silent 'https://api.github.com/repos/${oname}/${pname}/releases/latest' | jq -r '.tag_name' | tr -d v";
-      };
-
       # PiKVM related (incomplete)
       #
       # Picking back up from this commit for now
@@ -251,6 +214,7 @@
         # Upstream nixpkgs is ancient vendor it in and pr if its ok.
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; };
         helm-unittest = pkgs.callPackage ./pkgs/helm-unittest.nix { pkgs = stable; };
+        jira-cli = pkgs.callPackage ./pkgs/jira-cli.nix { pkgs = stable; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         nheko = pkgs.callPackage ./pkgs/nheko.nix { pkgs = stable; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { pkgs = stable; };
@@ -268,8 +232,8 @@
       }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
         hponcfg = pkgs.callPackage ./pkgs/hponcfg.nix { fetchurl = pkgs.fetchurl; rpmextract = stable.rpmextract; openssl = pkgs.openssl; busybox = pkgs.busybox; autoPatchelfHook = pkgs.autoPatchelfHook; makeWrapper = pkgs.makeWrapper; };
       }) // flake-utils.lib.flattenTree {
-        inherit jira-cli;
         inherit hwatch;
+
         hatools = pkgs.callPackage ./pkgs/hatools.nix { pkgs = stable; };
         xq = pkgs.callPackage ./pkgs/xq.nix { pkgs = stable; };
 
@@ -278,7 +242,7 @@
           buildInputs = [
             packages.hatools
             hwatch
-            jira-cli
+            packages.jira-cli
             packages.helm-unittest
             packages.transcrypt
             packages.xq
@@ -339,7 +303,8 @@
         buildInputs = [
           packages.hatools
           hwatch
-          jira-cli
+          packages.jira-cli
+          packages.helm-unittest
           packages.transcrypt
           packages.xq
         ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
