@@ -250,6 +250,7 @@
       packages = {
         # Upstream nixpkgs is ancient vendor it in and pr if its ok.
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; };
+        helm-unittest = pkgs.callPackage ./pkgs/helm-unittest.nix { pkgs = stable; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         nheko = pkgs.callPackage ./pkgs/nheko.nix { pkgs = stable; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { pkgs = stable; };
@@ -278,6 +279,7 @@
             packages.hatools
             hwatch
             jira-cli
+            packages.helm-unittest
             packages.transcrypt
             packages.xq
           ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
@@ -311,6 +313,7 @@
         hatools = flake-utils.lib.mkApp { drv = packages.hatools; };
         hwatch = flake-utils.lib.mkApp { drv = packages.hwatch; };
         jira-cli = flake-utils.lib.mkApp { drv = packages.jira-cli; };
+        helm-unittest = flake-utils.lib.mkApp { drv = packages.helm-unittest; };
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
         xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
