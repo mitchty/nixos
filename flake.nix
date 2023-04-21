@@ -63,149 +63,6 @@
         latest = "curl --location --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
       };
 
-      # PiKVM related (incomplete)
-      #
-      # Picking back up from this commit for now
-      # https://github.com/pikvm/packages/tree/fa1982ec7db49ee66a5429919738cd9e0c16587b/packages
-      #
-      # TODO: Get this building and deps, bit of a stub for now
-      # TODO: The arch package does a *LOT* of things this won't do that we'll relegate to a nixos module
-      # like ensuring certain sysctl's are set etc.... users blah blah blah
-      #
-      # Also todo is ssl certs that nixos module should make ssl certs easy peasy lemon whatever
-      #
-      # TODO: Figure out if its better to just build janus-gateway here with these overrides or not:
-      # https://github.com/pikvm/packages/blob/fa1982ec7db49ee66a5429919738cd9e0c16587b/packages/janus-gateway-pikvm/PKGBUILD#L57-L65
-      kvmd = with stable; python310.pkgs.buildPythonPackage rec {
-        pname = "kvmd";
-        version = "3.56";
-
-        src = fetchFromGitHub {
-          sha256 = "sha256-D+Dyg9tjjrTvBlLRBOnJKUc2/RT5zJFdqldY/RaSpzU=";
-          rev = "v3.56";
-          owner = "pikvm";
-          repo = pname;
-        };
-
-        # TODO: unit tests fail, figure out how to let them pass if possible
-        doCheck = false;
-
-        propagatedBuildInputs = with pkgs; [
-          freetype
-          libgpiod
-          nginx
-          openssl
-          platformio
-          janus-gateway
-          ustreamer
-          zstd
-          ipmitool
-          avrdude
-          v4l_utils
-        ];
-      };
-      ttyd_html_h = (extra "html.h" "sha256-MJE14kSSsvoFrUNGVKYOBfE9zCwBhtpAzQSRWzmZR6s=" "https://raw.githubusercontent.com/pikvm/packages/master/packages/ttyd/html.h");
-      ttyd = (with pkgs; stdenv.mkDerivation rec {
-        pname = "ttyd";
-        version = "1.6.3";
-
-        src = fetchFromGitHub {
-          sha256 = "sha256-Oj43XLohq7lyK6gq7YJDwdOWbTveNqX4vKE5X1M75eA=";
-          rev = "47c554323a00c413996c6db4df9cf6dde6e2f574";
-          owner = "tsl0922";
-          repo = pname;
-        };
-
-        preBuild = ''
-          install -m644 ${ttyd_html_h} html.h
-        '';
-
-        nativeBuildInputs = [
-          cmake
-          gnumake
-          gcc
-          libwebsockets
-          zlib
-          libuv
-          json_c
-          libpcap
-          openssl
-        ];
-
-        installPhase = ''
-          make install DESTDIR=""
-        '';
-      });
-
-      # TODO: https://sourceforge.net/projects/watchdog/ is at 5.16 pikvm still has 3 year old version, that important?
-      watchdog = (with pkgs; stdenv.mkDerivation {
-        pname = "watchdog";
-        version = "5.15";
-
-        src = fetchgit {
-          url = "https://git.code.sf.net/p/watchdog/code";
-          rev = "03d67da";
-          sha256 = "sha256-ZLLObroUWcdGPP4jpbR7IMHx0Yj4uUY6al0ztE2k5bI=";
-          fetchSubmodules = true;
-        };
-
-        nativeBuildInputs = [
-          autoreconfHook
-          pkg-config
-          gnumake
-          gcc
-        ];
-
-        # The config file uses DESTDIR in its install setup for a file in /etc
-        postPatch = ''
-          sed -ie "s/DESTDIR/PREFIX/" Makefile.am
-        '';
-
-        configureFlags = [
-          "--with-pidfile=/run/watchdog.pid"
-          "--with-ka_pidfile=/run/wd_keepalive.pid"
-          "--disable-nfs"
-        ];
-
-        buildPhase = ''
-          make -j $NIX_BUILD_CORES
-        '';
-
-        postInstall = ''
-          ln -s $out/sbin $out/bin
-        '';
-
-        installPhase = ''
-          make install DESTDIR="" PREFIX=$out
-        '';
-      });
-      ustreamer = (with pkgs; stdenv.mkDerivation {
-        pname = "ustreamer";
-        version = "4.13";
-        src = fetchFromGitHub {
-          owner = "pikvm";
-          repo = "ustreamer";
-          rev = "v4.13";
-          sha256 = "sha256-otiBdGHQLjYE8/FDJUZzcU+f9ZfkPRtXQ0EBVa4Ogcw=";
-          fetchSubmodules = true;
-        };
-
-        nativeBuildInputs = [
-          gnumake
-          gcc
-          libevent
-          libjpeg
-          libbsd
-        ];
-
-        # TODO: rpi related work for OMX/GPIO as per https://github.com/pikvm/ustreamer#building
-        buildPhase = "make -j $NIX_BUILD_CORES";
-
-        installPhase = ''
-          install -dm755 $out/bin
-          install -m755 src/ustreamer.bin $out/bin/ustreamer
-        '';
-      });
     in
     rec {
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
@@ -223,12 +80,6 @@
         swiftbar = pkgs.callPackage ./pkgs/swiftbar.nix { pkgs = stable; };
         vlc = pkgs.callPackage ./pkgs/vlc.nix { pkgs = stable; };
         wireshark = pkgs.callPackage ./pkgs/wireshark.nix { pkgs = stable; };
-      }) // (pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-        # kvm related TODO stuff, most likely old
-        inherit kvmd;
-        inherit ttyd;
-        inherit ustreamer;
-        inherit watchdog;
       }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
         hponcfg = pkgs.callPackage ./pkgs/hponcfg.nix { fetchurl = pkgs.fetchurl; rpmextract = stable.rpmextract; openssl = pkgs.openssl; busybox = pkgs.busybox; autoPatchelfHook = pkgs.autoPatchelfHook; makeWrapper = pkgs.makeWrapper; };
       }) // flake-utils.lib.flattenTree {
@@ -254,11 +105,6 @@
             packages.swiftbar
             packages.vlc
             packages.wireshark
-          ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
-            kvmd
-            ttyd
-            ustreamer
-            watchdog
           ] ++ pkgs.lib.optionals (system == "x86_64-linux") [
             packages.hponcfg
           ];
@@ -315,11 +161,6 @@
           packages.swiftbar
           packages.vlc
           packages.wireshark
-        ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
-          kvmd
-          ttyd
-          ustreamer
-          watchdog
         ] ++ pkgs.lib.optionals (system == "x86_64-linux") [
           packages.hponcfg
         ];
