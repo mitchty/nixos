@@ -7,16 +7,16 @@ with pkgs; buildGo118Module rec {
   # https://github.com/sibprogrammer/xq/releases
   oname = "sibprogrammer";
   pname = "xq";
-  version = "1.1.4";
+  version = "1.2.1";
 
   src = fetchFromGitHub {
     owner = oname;
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-bwyQ16E1M/vxwZQG472r0ZN7pVwZpb5wEot/Jt/Z6Ak=";
+    sha256 = "sha256-Z14x1b25wKNm9fECkNqGJglK/Z8Xq8VHmYfp5aEvvMU=";
   };
 
-  vendorSha256 = "sha256-5WLPLH8jsAQfx/OMJ9IZPPvqW0rXvnJf6PsFnVJH+CU=";
+  vendorSha256 = "sha256-CP4QsrTkFcOLDxnFc0apevXRmXHA9aJSU4AK9+TAxOU=";
 
   meta.mainProgram = "xq";
 
