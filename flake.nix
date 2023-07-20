@@ -68,6 +68,7 @@
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
       # updates most often first.
       packages = {
+        altshfmt = pkgs.callPackage ./pkgs/altshfmt.nix { pkgs = stable; makeWrapper = pkgs.makeWrapper; };
         # Upstream nixpkgs is ancient vendor it in and pr if its ok.
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; };
         helm-unittest = pkgs.callPackage ./pkgs/helm-unittest.nix { pkgs = stable; };
@@ -91,6 +92,7 @@
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
           buildInputs = [
+            packages.altshfmt
             packages.hatools
             hwatch
             packages.jira-cli
@@ -147,10 +149,11 @@
         # Macos only stuff is mostly just diskimages no devShell shenanigans
         # needed.
         buildInputs = [
-          packages.hatools
           hwatch
-          packages.jira-cli
+          packages.altshfmt
+          packages.hatools
           packages.helm-unittest
+          packages.jira-cli
           packages.transcrypt
           packages.xq
         ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
