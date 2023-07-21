@@ -69,6 +69,7 @@
       # updates most often first.
       packages = {
         altshfmt = pkgs.callPackage ./pkgs/altshfmt.nix { pkgs = stable; makeWrapper = pkgs.makeWrapper; };
+        no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { pkgs = stable; };
         # Upstream nixpkgs is ancient vendor it in and pr if its ok.
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; };
         helm-unittest = pkgs.callPackage ./pkgs/helm-unittest.nix { pkgs = stable; };
@@ -92,11 +93,12 @@
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
           buildInputs = [
+            hwatch
             packages.altshfmt
             packages.hatools
-            hwatch
-            packages.jira-cli
             packages.helm-unittest
+            packages.jira-cli
+            packages.no-more-secrets
             packages.transcrypt
             packages.xq
           ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
@@ -154,6 +156,7 @@
           packages.hatools
           packages.helm-unittest
           packages.jira-cli
+          packages.no-more-secrets
           packages.transcrypt
           packages.xq
         ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
