@@ -24,9 +24,6 @@ with lib; stdenv.mkDerivation rec {
       --prefix PATH : "${pkgs.lib.makeBinPath [ pkgs.gawk pkgs.shfmt ]}"
   '';
 
-  postFixup = ''
-    '';
-
   meta = {
     mainProgram = "altshfmt";
     description = "Alternative shfmt wrapper";
