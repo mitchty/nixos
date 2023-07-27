@@ -2,7 +2,7 @@
   description = "My out of band flakes/pkgs/modules for NixOS/Darwin";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     rust.url = "github:oxalica/rust-overlay";
@@ -69,11 +69,11 @@
       # updates most often first.
       packages = {
         altshfmt = pkgs.callPackage ./pkgs/altshfmt.nix { pkgs = stable; makeWrapper = pkgs.makeWrapper; };
-        no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { pkgs = stable; };
-        # Upstream nixpkgs is ancient vendor it in and pr if its ok.
-        transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; };
+        gh-actions-status = pkgs.callPackage ./pkgs/gh-actions-status.nix { pkgs = stable; };
         helm-unittest = pkgs.callPackage ./pkgs/helm-unittest.nix { pkgs = stable; };
         jira-cli = pkgs.callPackage ./pkgs/jira-cli.nix { pkgs = stable; };
+        no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { pkgs = stable; };
+        transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         nheko = pkgs.callPackage ./pkgs/nheko.nix { pkgs = stable; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { pkgs = stable; };
@@ -95,6 +95,7 @@
           buildInputs = [
             hwatch
             packages.altshfmt
+            packages.gh-actions-status
             packages.hatools
             packages.helm-unittest
             packages.jira-cli
@@ -124,10 +125,11 @@
       };
 
       apps = {
+        gh-actions-status = flake-utils.lib.mkApp { drv = packages.hatools; };
         hatools = flake-utils.lib.mkApp { drv = packages.hatools; };
+        helm-unittest = flake-utils.lib.mkApp { drv = packages.helm-unittest; };
         hwatch = flake-utils.lib.mkApp { drv = packages.hwatch; };
         jira-cli = flake-utils.lib.mkApp { drv = packages.jira-cli; };
-        helm-unittest = flake-utils.lib.mkApp { drv = packages.helm-unittest; };
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
         xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
@@ -153,6 +155,7 @@
         buildInputs = [
           hwatch
           packages.altshfmt
+          packages.gh-actions-status
           packages.hatools
           packages.helm-unittest
           packages.jira-cli

@@ -1,0 +1,46 @@
+diff --git a/go.mod b/go.mod
+index 2600f8b..91cf529 100644
+--- a/go.mod
++++ b/go.mod
+@@ -1,11 +1,27 @@
+ module github.com/vilmibm/actions-dashboard
+ 
+-go 1.15
++go 1.17
+ 
+ require (
+ 	github.com/charmbracelet/lipgloss v0.4.0
+ 	github.com/cli/go-gh v1.2.1
+-	github.com/kr/text v0.2.0 // indirect
+ 	github.com/spf13/pflag v1.0.5
+ 	golang.org/x/term v0.5.0
+ )
++
++require (
++	github.com/cli/safeexec v1.0.0 // indirect
++	github.com/cli/shurcooL-graphql v0.0.2 // indirect
++	github.com/henvic/httpretty v0.0.6 // indirect
++	github.com/kr/text v0.2.0 // indirect
++	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
++	github.com/mattn/go-isatty v0.0.16 // indirect
++	github.com/mattn/go-runewidth v0.0.13 // indirect
++	github.com/muesli/reflow v0.3.0 // indirect
++	github.com/muesli/termenv v0.12.0 // indirect
++	github.com/rivo/uniseg v0.2.0 // indirect
++	github.com/thlib/go-timezone-local v0.0.0-20210907160436-ef149e42d28e // indirect
++	golang.org/x/net v0.7.0 // indirect
++	golang.org/x/sys v0.5.0 // indirect
++	gopkg.in/yaml.v3 v3.0.1 // indirect
++)
+diff --git a/go.sum b/go.sum
+index d58846a..f5b254e 100644
+--- a/go.sum
++++ b/go.sum
+@@ -54,7 +54,6 @@ github.com/muesli/termenv v0.9.0/go.mod h1:R/LzAKf+suGs4IsO95y7+7DpFHO0KABgnZqtl
+ github.com/muesli/termenv v0.11.0/go.mod h1:Bd5NYQ7pd+SrtBSrSNoBBmXlcY8+Xj4BMJgh8qcZrvs=
+ github.com/muesli/termenv v0.12.0 h1:KuQRUE3PgxRFWhq4gHvZtPSLCGDqM5q/cYr1pZ39ytc=
+ github.com/muesli/termenv v0.12.0/go.mod h1:WCCv32tusQ/EEZ5S8oUIIrC/nIuBcxCVqlN4Xfkv+7A=
+-github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32 h1:W6apQkHrMkS0Muv8G/TipAy/FJl/rCYT0+EuS8+Z0z4=
+ github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32/go.mod h1:9wM+0iRr9ahx58uYLpLIr5fm8diHn0JbqRycJi6w0Ms=
+ github.com/olekukonko/tablewriter v0.0.5/go.mod h1:hPp6KlRPjbx+hW8ykQs1w3UBbZlj6HuIJcUGPhkA7kY=
+ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
