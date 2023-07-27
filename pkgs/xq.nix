@@ -3,8 +3,7 @@
 , pkgs
 }:
 
-with pkgs; buildGo118Module rec {
-  # https://github.com/sibprogrammer/xq/releases
+with pkgs; buildGoModule rec {
   oname = "sibprogrammer";
   pname = "xq";
   version = "1.2.1";

@@ -2,7 +2,7 @@
 , lib
 , pkgs
 }:
-pkgs.buildGo118Module rec {
+pkgs.buildGoModule rec {
   oname = "ankitpokhrel";
   pname = "jira-cli";
   version = "1.4.0";
