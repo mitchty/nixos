@@ -28,41 +28,6 @@
         name = "${fname}";
         inherit sha256;
       };
-
-      # Rust packages
-
-      # Testing out some watch related things, need to PR adding a Cargo.lock
-      # file as per
-      # https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html as
-      # we shouldn't have to cargo update to get a cargo.lock file for a command
-      # line app
-      hwatch = with pkgs; (pkgs.makeRustPlatform {
-        cargo = rust-bin.stable.latest.minimal;
-        rustc = rust-bin.stable.latest.minimal;
-      }).buildRustPackage rec {
-        pname = "hwatch";
-        version = "0.3.9";
-
-        src = fetchFromGitHub {
-          owner = "blacknon";
-          repo = pname;
-          rev = version;
-          sha256 = "sha256-O+qKVRPDn7y8JEAF75P6suH4hOfPLjWSNTDGX2V5z3w=";
-          forceFetchGit = true;
-        };
-
-        # Update via regenpatches
-        cargoPatches = [
-          ./patches/hwatch-add-cargo-lock.patch
-        ];
-
-        cargoSha256 = "sha256-fO+80nAwSnFsNM/81qLWN2YU55Lk4SKbLpSBQS0WJUo=";
-
-        passthru.tests.version = testVersion { package = hwatch; };
-
-        latest = "curl --location --silent 'https://api.github.com/repos/blacknon/hwatch/releases/latest' | jq -r '.tag_name'";
-      };
-
     in
     rec {
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
@@ -85,7 +50,7 @@
       }) // (pkgs.lib.optionalAttrs (system == "x86_64-linux") {
         hponcfg = pkgs.callPackage ./pkgs/hponcfg.nix { fetchurl = pkgs.fetchurl; rpmextract = stable.rpmextract; openssl = pkgs.openssl; busybox = pkgs.busybox; autoPatchelfHook = pkgs.autoPatchelfHook; makeWrapper = pkgs.makeWrapper; };
       }) // flake-utils.lib.flattenTree {
-        inherit hwatch;
+        hwatch = pkgs.callPackage ./pkgs/hwatch.nix { pkgs = stable; };
 
         hatools = pkgs.callPackage ./pkgs/hatools.nix { pkgs = stable; };
         xq = pkgs.callPackage ./pkgs/xq.nix { pkgs = stable; };
@@ -93,11 +58,11 @@
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
           buildInputs = [
-            hwatch
             packages.altshfmt
             packages.gh-actions-status
             packages.hatools
             packages.helm-unittest
+            packages.hwatch
             packages.jira-cli
             packages.no-more-secrets
             packages.transcrypt
@@ -153,11 +118,11 @@
         # Macos only stuff is mostly just diskimages no devShell shenanigans
         # needed.
         buildInputs = [
-          hwatch
           packages.altshfmt
           packages.gh-actions-status
           packages.hatools
           packages.helm-unittest
+          packages.hwatch
           packages.jira-cli
           packages.no-more-secrets
           packages.transcrypt
