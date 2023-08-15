@@ -47,6 +47,7 @@
         no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { inherit pkgs; };
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        hidden = pkgs.callPackage ./pkgs/hidden.nix { inherit pkgs; };
         nheko = pkgs.callPackage ./pkgs/nheko.nix { inherit pkgs; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { inherit pkgs; };
         stats = pkgs.callPackage ./pkgs/stats.nix { inherit pkgs; };
@@ -75,6 +76,7 @@
             packages.transcrypt
             packages.xq
           ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
+            packages.hidden
             packages.nheko
             packages.obs-studio
             packages.stats
@@ -105,6 +107,7 @@
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
         xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        hidden = flake-utils.lib.mkApp { drv = packages.hidden; };
         nheko = flake-utils.lib.mkApp { drv = packages.nheko; };
         obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
         stats = flake-utils.lib.mkApp { drv = packages.stats; };
@@ -135,6 +138,7 @@
           packages.transcrypt
           packages.xq
         ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
+          packages.hidden
           packages.nheko
           packages.obs-studio
           packages.stats
