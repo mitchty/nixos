@@ -24,7 +24,7 @@ with pkgs; stdenv.mkDerivation rec {
     sha256 = "sha256-P1SwJPXBxAvBiuvjkBRxAom0fhR+cVYfriKmYcqybQI=";
   };
 
-  latest = "curl --silent 'https://api.github.com/repos/${name}/${uname}/releases/latest' | jq -r '.tag_name'";
+  latest = "curl --silent 'https://api.github.com/repos/${name}/${uname}/releases/latest' | jq -r '.tag_name' | tr -d v";
 
   meta = {
     platforms = [ "x86_64-darwin" ];
