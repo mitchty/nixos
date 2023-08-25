@@ -35,6 +35,29 @@
         name = "${fname}";
         inherit sha256;
       };
+
+      buildInputsBase = [
+        "altshfmt"
+        "gh-actions-status"
+        "hatools"
+        "helm-unittest"
+        "hwatch"
+        "jira-cli"
+        "no-more-secrets"
+        "transcrypt"
+        "xq"
+      ];
+      buildInputsDarwinX64 = [
+        "clocker"
+        "hidden"
+        "nheko"
+        "maccy"
+        "obs-studio"
+      ];
+      buildInputsLinuxX64 = [
+        "hponcfg"
+      ];
+      allBuildInputs = buildInputsBase ++ pkgs.lib.optionals (system == "x86_64-darwin") buildInputsDarwinX64 ++ pkgs.lib.optionals (system == "x86_64-linux") buildInputsLinuxX64;
     in
     rec {
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
@@ -47,7 +70,9 @@
         no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { inherit pkgs; };
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        clocker = pkgs.callPackage ./pkgs/clocker.nix { inherit pkgs; };
         hidden = pkgs.callPackage ./pkgs/hidden.nix { inherit pkgs; };
+        maccy = pkgs.callPackage ./pkgs/maccy.nix { inherit pkgs; };
         nheko = pkgs.callPackage ./pkgs/nheko.nix { inherit pkgs; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { inherit pkgs; };
         stats = pkgs.callPackage ./pkgs/stats.nix { inherit pkgs; };
@@ -65,29 +90,7 @@
 
         default = pkgs.stdenv.mkDerivation {
           name = "mitchty";
-          buildInputs = [
-            packages.altshfmt
-            packages.gh-actions-status
-            packages.hatools
-            packages.helm-unittest
-            packages.hwatch
-            packages.jira-cli
-            packages.no-more-secrets
-            packages.transcrypt
-            packages.xq
-          ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
-            packages.hidden
-            packages.nheko
-            packages.obs-studio
-            packages.stats
-            packages.stretchly
-            packages.swiftbar
-            packages.vlc
-            packages.wireshark
-          ] ++ pkgs.lib.optionals (system == "x86_64-linux") [
-            packages.hponcfg
-          ];
-
+          buildInputs = pkgs.lib.attrsets.attrVals allBuildInputs packages;
           src = ./.;
 
           doCheck = false;
@@ -99,6 +102,7 @@
       };
 
       apps = {
+        altshfmt = flake-utils.lib.mkApp { drv = packages.altshfmt; };
         gh-actions-status = flake-utils.lib.mkApp { drv = packages.hatools; };
         hatools = flake-utils.lib.mkApp { drv = packages.hatools; };
         helm-unittest = flake-utils.lib.mkApp { drv = packages.helm-unittest; };
@@ -107,7 +111,9 @@
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
         xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
+        clocker = flake-utils.lib.mkApp { drv = packages.clocker; };
         hidden = flake-utils.lib.mkApp { drv = packages.hidden; };
+        maccy = flake-utils.lib.mkApp { drv = packages.maccy; };
         nheko = flake-utils.lib.mkApp { drv = packages.nheko; };
         obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
         stats = flake-utils.lib.mkApp { drv = packages.stats; };
@@ -124,32 +130,10 @@
       };
 
       # TODO: This is deprecated according to nix flake check replace at some point.
-      devShell = pkgs.mkShell {
-        # Macos only stuff is mostly just diskimages no devShell shenanigans
-        # needed.
-        buildInputs = [
-          packages.altshfmt
-          packages.gh-actions-status
-          packages.hatools
-          packages.helm-unittest
-          packages.hwatch
-          packages.jira-cli
-          packages.no-more-secrets
-          packages.transcrypt
-          packages.xq
-        ] ++ pkgs.lib.optionals (system == "x86_64-darwin") [
-          packages.hidden
-          packages.nheko
-          packages.obs-studio
-          packages.stats
-          packages.stretchly
-          packages.swiftbar
-          packages.vlc
-          packages.wireshark
-        ] ++ pkgs.lib.optionals (system == "x86_64-linux") [
-          packages.hponcfg
-        ];
-      };
+      devShell = pkgs.mkShell
+        {
+          buildInputs = pkgs.lib.attrsets.attrVals allBuildInputs packages;
+        };
       checks = {
         nixpkgs-fmt = pkgs.runCommand "check-nix-format" { } ''
           ${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt --check ${./.}
