@@ -38,7 +38,6 @@
 
       buildInputsBase = [
         "altshfmt"
-        "keepingyouawake"
         "gh-actions-status"
         "hatools"
         "helm-unittest"
@@ -51,8 +50,9 @@
       buildInputsDarwinX64 = [
         "clocker"
         "hidden"
-        "nheko"
+        "keepingyouawake"
         "maccy"
+        "nheko"
         "obs-studio"
       ];
       buildInputsLinuxX64 = [
