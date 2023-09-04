@@ -49,16 +49,19 @@
       ];
       buildInputsDarwinX64 = [
         "clocker"
+        "franz"
         "hidden"
         "keepingyouawake"
         "maccy"
         "nheko"
         "obs-studio"
+        "vlc"
       ];
       buildInputsLinuxX64 = [
         "hponcfg"
       ];
       allBuildInputs = buildInputsBase ++ pkgs.lib.optionals (system == "x86_64-darwin") buildInputsDarwinX64 ++ pkgs.lib.optionals (system == "x86_64-linux") buildInputsLinuxX64;
+
     in
     rec {
       # TODO: Make all this subpackages n stuff, will do it piecemeal with what
@@ -71,9 +74,10 @@
         no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { inherit pkgs; };
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
-        keepingyouawake = pkgs.callPackage ./pkgs/keepingyouawake.nix { inherit pkgs; };
         clocker = pkgs.callPackage ./pkgs/clocker.nix { inherit pkgs; };
+        franz = pkgs.callPackage ./pkgs/franz.nix { inherit pkgs; };
         hidden = pkgs.callPackage ./pkgs/hidden.nix { inherit pkgs; };
+        keepingyouawake = pkgs.callPackage ./pkgs/keepingyouawake.nix { inherit pkgs; };
         maccy = pkgs.callPackage ./pkgs/maccy.nix { inherit pkgs; };
         nheko = pkgs.callPackage ./pkgs/nheko.nix { inherit pkgs; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { inherit pkgs; };
@@ -113,9 +117,10 @@
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
         xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
-        keepingyouawake = flake-utils.lib.mkApp { drv = packages.keepingyouawake; };
         clocker = flake-utils.lib.mkApp { drv = packages.clocker; };
+        franz = flake-utils.lib.mkApp { drv = packages.franz; };
         hidden = flake-utils.lib.mkApp { drv = packages.hidden; };
+        keepingyouawake = flake-utils.lib.mkApp { drv = packages.keepingyouawake; };
         maccy = flake-utils.lib.mkApp { drv = packages.maccy; };
         nheko = flake-utils.lib.mkApp { drv = packages.nheko; };
         obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
