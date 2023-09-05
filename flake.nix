@@ -49,7 +49,7 @@
       ];
       buildInputsDarwinX64 = [
         "clocker"
-        "franz"
+        "ferdium"
         "hidden"
         "keepingyouawake"
         "maccy"
@@ -76,7 +76,7 @@
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         clocker = pkgs.callPackage ./pkgs/clocker.nix { inherit pkgs; };
-        franz = pkgs.callPackage ./pkgs/franz.nix { inherit pkgs; };
+        ferdium = pkgs.callPackage ./pkgs/ferdium.nix { inherit pkgs; };
         hidden = pkgs.callPackage ./pkgs/hidden.nix { inherit pkgs; };
         keepingyouawake = pkgs.callPackage ./pkgs/keepingyouawake.nix { inherit pkgs; };
         maccy = pkgs.callPackage ./pkgs/maccy.nix { inherit pkgs; };
@@ -120,7 +120,7 @@
         xq = flake-utils.lib.mkApp { drv = packages.xq; };
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         clocker = flake-utils.lib.mkApp { drv = packages.clocker; };
-        franz = flake-utils.lib.mkApp { drv = packages.franz; };
+        ferdium = flake-utils.lib.mkApp { drv = packages.ferdium; };
         hidden = flake-utils.lib.mkApp { drv = packages.hidden; };
         keepingyouawake = flake-utils.lib.mkApp { drv = packages.keepingyouawake; };
         maccy = flake-utils.lib.mkApp { drv = packages.maccy; };
