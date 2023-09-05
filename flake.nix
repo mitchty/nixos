@@ -54,6 +54,7 @@
         "keepingyouawake"
         "maccy"
         "nheko"
+        "notunes"
         "obs-studio"
         "vlc"
       ];
@@ -80,6 +81,7 @@
         keepingyouawake = pkgs.callPackage ./pkgs/keepingyouawake.nix { inherit pkgs; };
         maccy = pkgs.callPackage ./pkgs/maccy.nix { inherit pkgs; };
         nheko = pkgs.callPackage ./pkgs/nheko.nix { inherit pkgs; };
+        notunes = pkgs.callPackage ./pkgs/notunes.nix { inherit pkgs; };
         obs-studio = pkgs.callPackage ./pkgs/obs-studio.nix { inherit pkgs; };
         stats = pkgs.callPackage ./pkgs/stats.nix { inherit pkgs; };
         stretchly = pkgs.callPackage ./pkgs/stretchly.nix { inherit pkgs; };
@@ -123,6 +125,7 @@
         keepingyouawake = flake-utils.lib.mkApp { drv = packages.keepingyouawake; };
         maccy = flake-utils.lib.mkApp { drv = packages.maccy; };
         nheko = flake-utils.lib.mkApp { drv = packages.nheko; };
+        notunes = flake-utils.lib.mkApp { drv = packages.notunes; };
         obs-studio = flake-utils.lib.mkApp { drv = packages.obs-studio; };
         stats = flake-utils.lib.mkApp { drv = packages.stats; };
         stretchly = flake-utils.lib.mkApp { drv = packages.stretchly; };
