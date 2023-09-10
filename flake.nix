@@ -50,6 +50,7 @@
       buildInputsDarwinX64 = [
         "clocker"
         "ferdium"
+        "freetube"
         "hidden"
         "keepingyouawake"
         "maccy"
@@ -77,6 +78,7 @@
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         clocker = pkgs.callPackage ./pkgs/clocker.nix { inherit pkgs; };
         ferdium = pkgs.callPackage ./pkgs/ferdium.nix { inherit pkgs; };
+        freetube = pkgs.callPackage ./pkgs/freetube.nix { inherit pkgs; };
         hidden = pkgs.callPackage ./pkgs/hidden.nix { inherit pkgs; };
         keepingyouawake = pkgs.callPackage ./pkgs/keepingyouawake.nix { inherit pkgs; };
         maccy = pkgs.callPackage ./pkgs/maccy.nix { inherit pkgs; };
@@ -121,6 +123,7 @@
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         clocker = flake-utils.lib.mkApp { drv = packages.clocker; };
         ferdium = flake-utils.lib.mkApp { drv = packages.ferdium; };
+        freetube = flake-utils.lib.mkApp { drv = packages.freetube; };
         hidden = flake-utils.lib.mkApp { drv = packages.hidden; };
         keepingyouawake = flake-utils.lib.mkApp { drv = packages.keepingyouawake; };
         maccy = flake-utils.lib.mkApp { drv = packages.maccy; };
