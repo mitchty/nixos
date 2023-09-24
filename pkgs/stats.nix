@@ -7,7 +7,7 @@ with pkgs; stdenv.mkDerivation rec {
   name = "stats";
   uname = "exelban";
   aname = "Stats";
-  version = "2.9.6";
+  version = "2.9.7";
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
@@ -22,7 +22,7 @@ with pkgs; stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/${uname}/${name}/releases/download/v${version}/${aname}.dmg";
-    sha256 = "sha256-rbv8YlBfq0cEqv8Hwoi5Qmai2ROl3IHdmSd9SCCZtSM=";
+    sha256 = "sha256-F6bz1XHIjO2Z6HChUXarC1gk5hsKDjDssD6uqV7965Y=";
   };
 
   latest = "curl --silent 'https://api.github.com/repos/exelban/stats/releases/latest' | jq -r '.tag_name' | tr -d v";
