@@ -28,4 +28,3 @@ with pkgs; stdenv.mkDerivation rec {
     platforms = [ "x86_64-darwin" ];
   };
 }
-# https://github.com/ferdium/ferdium-app/releases/download/v6.4.1/Ferdium-mac-6.4.1-x64.dmg

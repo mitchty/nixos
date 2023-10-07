@@ -23,6 +23,13 @@ for pkg in freetube keepingyouawake ferdium clocker maccy gh-action-status hidde
   if [ "$?" -eq 0 ]; then
     latest=$(eval "${evalstring}")
     ours=$(nix eval --raw ".#${pkg}.version" 2> /dev/null)
+
+    if [ "${pkg}" = "ferdium" ] && [ "${latest}" = "6.5.1" ]; then
+      # https://github.com/ferdium/ferdium-app/releases/tag/v6.5.1 has a blurb
+      # about breakage on macos and the disk image isn't present
+      continue
+    fi
+
     if [ "$?" -eq 0 ]; then
       if [ "${latest}" != "${ours}" ]; then
         printf "%s latest version out of date: latest=%s ours=%s\n" "${pkg}" "${latest}" "${ours}" >&2
