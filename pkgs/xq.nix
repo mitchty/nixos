@@ -6,16 +6,16 @@
 with pkgs; buildGoModule rec {
   oname = "sibprogrammer";
   pname = "xq";
-  version = "1.2.1";
+  version = "1.2.2";
 
   src = fetchFromGitHub {
     owner = oname;
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-Z14x1b25wKNm9fECkNqGJglK/Z8Xq8VHmYfp5aEvvMU=";
+    sha256 = "sha256-bhJ8zMZQZn/VzhulkfGOW+uyS8E43TIREAvKIsEPonA=";
   };
 
-  vendorSha256 = "sha256-CP4QsrTkFcOLDxnFc0apevXRmXHA9aJSU4AK9+TAxOU=";
+  vendorSha256 = "sha256-iJ1JMvIJqXLkZXuzn2rzKnLbiagTocg/6mJN3Pgd/4w=";
 
   meta.mainProgram = "xq";
 
