@@ -6,7 +6,7 @@ with pkgs; stdenv.mkDerivation rec {
   name = "freetube";
   uname = "FreeTubeApp";
   aname = "FreeTube";
-  version = "0.19.0";
+  version = "0.19.1";
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
@@ -19,7 +19,7 @@ with pkgs; stdenv.mkDerivation rec {
   src = fetchurl {
     name = "${aname}.dmg";
     url = "https://github.com/${uname}/${aname}/releases/download/v${version}-beta/${name}-${version}-mac-x64.dmg";
-    sha256 = "sha256-hfnqjbQ7iQgpV/d4IbPHzcSLs3G29V+VFY78TGT8ntw=";
+    sha256 = "sha256-So93AA4BphI6MlL1IXdE1umDb3hkLCIggZF+Ixj6HGA=";
   };
 
   # For some weird reason *EVERY* release they have is a pre-release tagged with
