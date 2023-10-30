@@ -6,7 +6,7 @@ with pkgs; stdenv.mkDerivation rec {
   name = "ferdium";
   uname = "ferdium";
   aname = "Ferdium";
-  version = "6.4.1";
+  version = "6.6.0";
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
@@ -19,7 +19,7 @@ with pkgs; stdenv.mkDerivation rec {
   src = fetchurl {
     name = "${aname}.dmg";
     url = "https://github.com/${uname}/${name}-app/releases/download/v${version}/${aname}-mac-${version}-x64.dmg";
-    sha256 = "sha256-sSEYaYN/4BPSehJ8fY+f3xFmDjZxIdHdEcoKgMEEnnY=";
+    sha256 = "sha256-pbE7rljZYQzNHCbl5+qxQ+WI9KLoSFUSmz2v9m8NDYE=";
   };
 
   latest = "curl --silent 'https://api.github.com/repos/${uname}/${name}-app/releases/latest' | jq -r '.tag_name' | tr -d v";
