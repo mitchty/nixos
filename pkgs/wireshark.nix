@@ -20,7 +20,7 @@ with pkgs; stdenv.mkDerivation rec {
     url = "https://2.na.dl.wireshark.org/osx/Wireshark%20${version}%20Intel%2064.dmg";
     sha256 = "sha256-8K5s/C7PHn9bFHXJG7LF96xjF0QFpmcFa7KbjBfxGAs=";
   };
-  latest = "curl -s https://gitlab.com/api/v4/projects/7898047/repository/tags?order_by=version | jq -r '.[0].name' | sed -e 's/wireshark-//g'";
+  latest = "curl -s https://gitlab.com/api/v4/projects/7898047/repository/tags?order_by=version | jq -r '.[].name' | awk '!/rc/ {print $1;exit}' | sed -e 's/wireshark-//g'";
 
   meta = {
     platforms = [ "x86_64-darwin" ];
