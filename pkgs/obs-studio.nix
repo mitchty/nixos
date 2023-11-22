@@ -11,10 +11,12 @@ with pkgs; stdenv.mkDerivation rec {
   sourceRoot = ".";
   phases = [ "installPhase" ];
   installPhase = ''
+    set -x
     install -dm755 "$out/Applications"
-    VOLUME=`/usr/bin/hdiutil attach $src | grep Volumes | awk '{print $3}'`
-    cp -rf $VOLUME/${aname}.app $out/Applications/${aname}.app
-    /usr/bin/hdiutil detach $VOLUME
+    VOLUME=$(/usr/bin/hdiutil attach $src | awk '/Volumes/ { print substr($0, index($0,$3)) }')
+    trap "/usr/bin/hdiutil detach \"$VOLUME\"" EXIT INT HUP TERM
+    APP=$(${pkgs.findutils}/bin/find "$VOLUME" -maxdepth 1 -name '*.app')
+    cp -rf "$APP" "$out/Applications/$(basename \"$APP\").app"
   '';
 
   src = fetchurl {
