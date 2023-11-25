@@ -13,7 +13,7 @@ with pkgs; stdenv.mkDerivation rec {
   installPhase = ''
     set -x
     install -dm755 "$out/Applications"
-    VOLUME=$(/usr/bin/hdiutil attach $src | awk '/Volumes/ { print substr($0, index($0,$3)) }')
+    VOLUME=$(/usr/bin/hdiutil attach -nobrowse $src | awk '/Volumes/ { print substr($0, index($0,$3)) }')
     trap "/usr/bin/hdiutil detach \"$VOLUME\"" EXIT INT HUP TERM
     APP=$(${pkgs.findutils}/bin/find "$VOLUME" -maxdepth 1 -name '*.app')
     cp -rf "$APP" "$out/Applications/$(basename \"$APP\").app"
