@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, git, makeWrapper, openssl, coreutils, util-linux, gnugrep, gnused, gawk }:
+{ lib, stdenv, fetchpatch, fetchFromGitHub, git, makeWrapper, openssl, coreutils, util-linux, gnugrep, gnused, gawk }:
 
 stdenv.mkDerivation rec {
   pname = "transcrypt";
@@ -14,7 +14,16 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ makeWrapper ];
   buildInputs = [ git openssl coreutils util-linux gnugrep gnused gawk ];
 
-  patches = [ ../patches/helper-scripts_depspathprefix.patch ];
+  patches = [
+    ../patches/helper-scripts_depspathprefix.patch
+    # Get rid of the stupid openssl warning messages.
+    (fetchpatch {
+      name = "suppress-openssl-pbkdf2-warnings";
+      url = "https://github.com/elasticdog/transcrypt/compare/suppress-openssl-pbkdf2-warnings.diff";
+      sha256 = "sha256-wRMx/Kbkm/Xpl1aaX9jjk6xMXZf6seEg5BhkZ34WEpI=";
+    })
+  ];
+
 
   installPhase = ''
     install -m 755 -D transcrypt $out/bin/transcrypt

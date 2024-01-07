@@ -74,7 +74,7 @@
         helm-unittest = pkgs.callPackage ./pkgs/helm-unittest.nix { inherit pkgs; };
         jira-cli = pkgs.callPackage ./pkgs/jira-cli.nix { inherit pkgs; };
         no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { inherit pkgs; };
-        transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
+        transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchpatch = pkgs.fetchpatch; fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
       } // (pkgs.lib.optionalAttrs (system == "x86_64-darwin") {
         clocker = pkgs.callPackage ./pkgs/clocker.nix { inherit pkgs; };
         ferdium = pkgs.callPackage ./pkgs/ferdium.nix { inherit pkgs; };
