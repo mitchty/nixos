@@ -28,7 +28,7 @@ pkgs.buildGoModule rec {
 
   nativeBuildInputs = [ pkgs.less ];
 
-  vendorSha256 = "sha256-sG/ZKQRVxBfaMKnLk2+HdmRhojI6BZVob1XDIAYMfY0=";
+  vendorHash = "sha256-sG/ZKQRVxBfaMKnLk2+HdmRhojI6BZVob1XDIAYMfY0=";
 
   meta.mainProgram = "jira";
 
