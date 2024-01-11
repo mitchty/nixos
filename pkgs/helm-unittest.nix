@@ -5,16 +5,16 @@
 pkgs.buildGoModule
 rec {
   pname = "helm-unittest";
-  version = "0.3.0";
+  version = "0.4.0";
 
   src = pkgs.fetchFromGitHub {
     owner = "helm-unittest";
     repo = "helm-unittest";
     rev = "v${version}";
-    hash = "sha256-B2JIurZ2PWmwAwdpE5Fjl5nsHgWasj6LvgPjmlOx4x4=";
+    hash = "sha256-jS25CQZvHtJ/A3A+dSHew5LbgzlynYvO7ml0QL6h1ns=";
   };
 
-  vendorHash = "sha256-SIm9R+bUnLdVIFOI3456NDXKz8i04LSJLXoC25W0Llw=";
+  vendorHash = "sha256-iVHweO/lVJ8fkc3HoY/jnGxclSGwbNLn9WiWh61zYKo=";
 
   ldflags = [ "-s" "-w" ];
 
@@ -38,4 +38,5 @@ rec {
     license = licenses.mit;
     maintainers = with maintainers; [ ];
   };
+  latest = "curl --location --silent 'https://api.github.com/repos/${pname}/${pname}/releases/latest' | jq -r '.tag_name' | tr -d v";
 }
