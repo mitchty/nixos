@@ -14,7 +14,7 @@ pkgs.buildGoModule rec {
     sha256 = "sha256-Wly+GH3bHS8pDh6Vs1xSK09e5MbZsb+2xuaMKdQaIUc=";
   };
 
-  vendorSha256 = "sha256-cUjY1yhkH1I2AT4iuLTTneRkgtjSFauWeBUxTzwa200=";
+  vendorHash = "sha256-cUjY1yhkH1I2AT4iuLTTneRkgtjSFauWeBUxTzwa200=";
 
   patches = [
     ../patches/gh-actions-status-go-deps.patch
