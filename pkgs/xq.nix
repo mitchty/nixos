@@ -15,7 +15,7 @@ with pkgs; buildGoModule rec {
     sha256 = "sha256-Zg1ARyDXklKBR5WhqRakWT/KcG5796h2MxsBjPCWSjs=";
   };
 
-  vendorSha256 = "sha256-NNhndc604B0nGnToS7MtQzpn3t3xPl5DlkCafc/EyKE=";
+  vendorHash = "sha256-NNhndc604B0nGnToS7MtQzpn3t3xPl5DlkCafc/EyKE=";
 
   meta.mainProgram = "xq";
 
