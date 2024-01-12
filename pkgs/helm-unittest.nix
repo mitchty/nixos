@@ -5,16 +5,16 @@
 pkgs.buildGoModule
 rec {
   pname = "helm-unittest";
-  version = "0.4.0";
+  version = "0.4.1";
 
   src = pkgs.fetchFromGitHub {
     owner = "helm-unittest";
     repo = "helm-unittest";
     rev = "v${version}";
-    hash = "sha256-jS25CQZvHtJ/A3A+dSHew5LbgzlynYvO7ml0QL6h1ns=";
+    hash = "sha256-8rGYFoBhNPJnsZsRXJ7Z9a/KOV4d2ZIVLSdYCpf3IMs=";
   };
 
-  vendorHash = "sha256-iVHweO/lVJ8fkc3HoY/jnGxclSGwbNLn9WiWh61zYKo=";
+  vendorHash = "sha256-wD4FxJ/+8iw2qAz+s0G/8/PKt7X0MZn+roWtc/wTWmw=";
 
   ldflags = [ "-s" "-w" ];
 
