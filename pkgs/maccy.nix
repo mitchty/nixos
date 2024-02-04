@@ -6,7 +6,7 @@ with pkgs; stdenv.mkDerivation rec {
   name = "p0deje";
   uname = "maccy";
   aname = "Maccy";
-  version = "0.29.3";
+  version = "0.29.4";
 
   buildInputs = [ unzip ];
   sourceRoot = ".";
@@ -20,7 +20,7 @@ with pkgs; stdenv.mkDerivation rec {
   src = fetchurl {
     name = "${aname}.app.zip";
     url = "https://github.com/${name}/${aname}/releases/download/${version}/${aname}.app.zip";
-    sha256 = "sha256-1iIv92PLK1j5BWLeF2nfKKSPuEfhMj680IBO8vAFgTc=";
+    sha256 = "sha256-6ltT2I7DFnkqf92zGftwiudEbdZ9dF221w1mPYZZKuI=";
   };
 
   latest = "curl --silent 'https://api.github.com/repos/${name}/${aname}/releases/latest' | jq -r '.tag_name'";
