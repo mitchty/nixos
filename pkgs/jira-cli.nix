@@ -5,13 +5,13 @@
 pkgs.buildGoModule rec {
   oname = "ankitpokhrel";
   pname = "jira-cli";
-  version = "1.5.0";
+  version = "1.5.1";
 
   src = pkgs.fetchFromGitHub {
     owner = oname;
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-FdDoKww/6WzKCZBrgvh72TRovMXLOOzlmoFreMGWAeo=";
+    sha256 = "sha256-edytj9hB8lDwy3qGSyLudu5G4DSRGKhD0vDoWz5eUgs=";
   };
 
   # For a rather contrived test in the test suite that uses this...
