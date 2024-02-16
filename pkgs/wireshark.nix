@@ -5,7 +5,7 @@
 with pkgs; stdenv.mkDerivation rec {
   name = "wireshark";
   gname = "Wireshark";
-  version = "4.2.2";
+  version = "4.2.3";
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
@@ -18,7 +18,7 @@ with pkgs; stdenv.mkDerivation rec {
   src = fetchurl {
     name = "${gname}.dmg";
     url = "https://2.na.dl.wireshark.org/osx/Wireshark%20${version}%20Intel%2064.dmg";
-    sha256 = "sha256-UolxuXxAXxgNJTK5L+yWPGeFdcu6y/epY5NjBufxcmA=";
+    sha256 = "sha256-zqAtPTbBy4Voq+tCpQtRaaJv0Xmjcm9EUeFnxhJDuEY=";
   };
   latest = "curl -s https://gitlab.com/api/v4/projects/7898047/repository/tags?order_by=version | jq -r '.[].name' | awk '!/rc/ {print $1;exit}' | sed -e 's/wireshark-//g'";
 
