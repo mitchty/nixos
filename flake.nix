@@ -40,7 +40,6 @@
         "altshfmt"
         "gh-actions-status"
         "hatools"
-        "helm-unittest"
         "hwatch"
         "jira-cli"
         "no-more-secrets"
@@ -71,7 +70,6 @@
       packages = {
         altshfmt = pkgs.callPackage ./pkgs/altshfmt.nix { inherit pkgs; makeWrapper = pkgs.makeWrapper; };
         gh-actions-status = pkgs.callPackage ./pkgs/gh-actions-status.nix { inherit pkgs; };
-        helm-unittest = pkgs.callPackage ./pkgs/helm-unittest.nix { inherit pkgs; };
         jira-cli = pkgs.callPackage ./pkgs/jira-cli.nix { inherit pkgs; };
         no-more-secrets = pkgs.callPackage ./pkgs/no-more-secrets.nix { inherit pkgs; };
         transcrypt = pkgs.callPackage ./pkgs/transcrypt.nix { fetchpatch = pkgs.fetchpatch; fetchFromGitHub = pkgs.fetchFromGitHub; git = pkgs.git; openssl = pkgs.openssl; coreutils = pkgs.coreutils; util-linux = pkgs.util-linux; gnugrep = pkgs.gnugrep; gnused = pkgs.gnused; gawk = pkgs.gawk; }; # Upstream nixpkgs is ancient vendor it in and pr if its ok.
@@ -115,7 +113,6 @@
         altshfmt = flake-utils.lib.mkApp { drv = packages.altshfmt; };
         gh-actions-status = flake-utils.lib.mkApp { drv = packages.hatools; };
         hatools = flake-utils.lib.mkApp { drv = packages.hatools; };
-        helm-unittest = flake-utils.lib.mkApp { drv = packages.helm-unittest; };
         hwatch = flake-utils.lib.mkApp { drv = packages.hwatch; };
         jira-cli = flake-utils.lib.mkApp { drv = packages.jira-cli; };
         transcrypt = flake-utils.lib.mkApp { drv = packages.transcrypt; };
