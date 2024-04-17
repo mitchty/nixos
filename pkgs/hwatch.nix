@@ -6,17 +6,17 @@
 }:
 pkgs.rustPlatform.buildRustPackage rec {
   pname = "hwatch";
-  version = "0.3.11";
+  version = "0.3.12";
 
   src = pkgs.fetchFromGitHub {
     owner = "blacknon";
     repo = pname;
     rev = version;
-    sha256 = "sha256-S6hnmNnwdWd6iFM01K52oiKXiqu/0v5yvKKoeQMEqy0=";
+    sha256 = "sha256-Klv1VIJv4/R7HvvB6H+WxTeJxQYFqAFU3HC6oafD/90=";
     forceFetchGit = true;
   };
 
-  cargoSha256 = "sha256-P4XkbV6QlokedKumX3UbCfEaAqH9VF9IKVyZIumZ6u0=";
+  cargoSha256 = "sha256-Aos/QP8tLiKFmAZss19jn5h/murZR2jgTYRYalUONHw=";
 
   # passthru.tests.version = pkgs.testVersion {
   #   package = hwatch; };
