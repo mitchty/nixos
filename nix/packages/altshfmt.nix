@@ -2,8 +2,7 @@
 , lib
 , pkgs
 , makeWrapper
-}:
-with lib; stdenv.mkDerivation rec {
+}: stdenv.mkDerivation rec {
   pname = "altshfmt";
   version = "0.2.0";
 

@@ -1,9 +1,8 @@
+# Ye olde halockrun and hatimerun
 { stdenv
 , lib
 , pkgs
-}:
-# Ye olde halockrun and hatimerun
-stdenv.mkDerivation rec {
+}: stdenv.mkDerivation rec {
   oname = "fatalmind";
   pname = "hatools";
   version = "2.1.4";
@@ -17,11 +16,16 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     pkgs.autoreconfHook
-    pkgs.gnumake
-    pkgs.gcc
   ];
 
   installPhase = ''
     make install DESTDIR=""
   '';
+
+  meta = {
+    mainProgram = "halockrun";
+    description = "halockrun and hatimerun ha tools";
+    maintainers = with lib.maintainers; [ mitchty ];
+    # homepage = "https://github.com/shellspec/altshfmt";
+  };
 }
