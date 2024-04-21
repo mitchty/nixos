@@ -17,7 +17,7 @@ pkgs.buildGoModule rec {
   vendorHash = "sha256-cUjY1yhkH1I2AT4iuLTTneRkgtjSFauWeBUxTzwa200=";
 
   patches = [
-    ../patches/gh-actions-status-go-deps.patch
+    ../../patches/gh-actions-status-go-deps.patch
   ];
 
   ldflags = [

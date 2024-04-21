@@ -4,8 +4,7 @@
   description = "My out of band flakes/pkgs/modules for NixOS/Darwin";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/90f456026d284c22b3e3497be980b2e47d0b28ac";
     rust = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,7 +21,7 @@
       systems = [ "x86_64-linux" "x86_64-darwin" ];
 
       withOverlays = [
-        inputs.rust.overlays.default
+        (import inputs.rust)
       ];
     };
 }

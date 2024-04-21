@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
   buildInputs = [ git openssl coreutils util-linux gnugrep gnused gawk ];
 
   patches = [
-    ../patches/helper-scripts_depspathprefix.patch
+    ../../patches/helper-scripts_depspathprefix.patch
     # Get rid of the stupid openssl warning messages.
     (fetchpatch {
       name = "suppress-openssl-pbkdf2-warnings";
