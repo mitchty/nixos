@@ -5,14 +5,14 @@
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "ytdl-sub";
-  version = "2024.07.13";
+  version = "2024.07.21";
   format = "pyproject";
 
   src = fetchFromGitHub {
     owner = "jmbannon";
     repo = "ytdl-sub";
     rev = "refs/tags/${version}";
-    hash = "sha256-DjJav6fFwMCzmrGTf/oiH/39ZPibmcFmHDWD3BDfmSQ=";
+    hash = "sha256-W0l8G3DThAvSd12AIsS9ylC13OiY1Dhsf7SRIL2J2nQ=";
   };
 
   # Add ffmpeg from nix to default path
