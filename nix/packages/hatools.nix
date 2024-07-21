@@ -1,4 +1,3 @@
-# Ye olde halockrun and hatimerun
 { stdenv
 , lib
 , pkgs
@@ -24,8 +23,9 @@
 
   meta = {
     mainProgram = "halockrun";
-    description = "halockrun and hatimerun ha tools";
+    description = "halockrun and hatimerun utilities";
     maintainers = with lib.maintainers; [ mitchty ];
-    # homepage = "https://github.com/shellspec/altshfmt";
+    homepage = "https://fatalmind.com/software/hatools/";
+    platforms = lib.platforms.all;
   };
 }
