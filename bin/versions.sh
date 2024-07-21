@@ -18,7 +18,7 @@ ok=0
 ${DIR:+cd $DIR}
 
 # 2> /dev/null to nuke the stderr warning: messages
-for pkg in freetube keepingyouawake ferdium clocker maccy gh-action-status hidden nheko obs-studio stats stretchly swiftbar wireshark vlc hwatch jira-cli transcrypt xq; do
+for pkg in ytdl-sub freetube keepingyouawake ferdium clocker maccy gh-action-status hidden nheko obs-studio stats stretchly swiftbar wireshark vlc hwatch jira-cli transcrypt xq; do
   evalstring=$(nix eval --raw ".#${pkg}.latest" 2> /dev/null)
   if [ "$?" -eq 0 ]; then
     latest=$(eval "${evalstring}")
