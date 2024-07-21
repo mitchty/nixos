@@ -29,6 +29,6 @@ with pkgs; stdenv.mkDerivation rec {
   latest = "curl --silent 'https://api.github.com/repos/obsproject/obs-studio/releases/latest' | jq -r '.tag_name'";
 
   meta = {
-    platforms = [ "x86_64-darwin" ];
+    platforms = [ pkgs.lib.platforms.darwin ];
   };
 }
