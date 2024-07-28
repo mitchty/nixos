@@ -26,7 +26,7 @@ for pkg in ytdl-sub freetube keepingyouawake ferdium clocker maccy gh-action-sta
 
     if [ "$?" -eq 0 ]; then
       if [ "${latest}" != "${ours}" ]; then
-        printf "%s latest version out of date: latest=%s ours=%s\n" "${pkg}" "${latest}" "${ours}" >&2
+        printf "%s latest version out of date: ours=%s latest=%s\n" "${pkg}" "${ours}" "${latest}" >&2
         printf "nix run github:MiC92/nix-update -- --flake %s --version %s\n" "${pkg}" "${latest}"
         ok=$((ok + 1))
       fi
