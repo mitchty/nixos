@@ -1,6 +1,7 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
 stdenv.mkDerivation rec {
   oname = "bartobri";

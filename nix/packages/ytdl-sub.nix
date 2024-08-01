@@ -1,7 +1,8 @@
-{ lib
-, pkgs
-, fetchFromGitHub
-, python3
+{
+  lib,
+  pkgs,
+  fetchFromGitHub,
+  python3,
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "ytdl-sub";
@@ -32,9 +33,7 @@ python3.pkgs.buildPythonApplication rec {
     colorama
   ];
 
-  buildInputs = [
-    pkgs.ffmpeg
-  ];
+  buildInputs = [ pkgs.ffmpeg ];
 
   nativeBuildInputs = [
     python3.pkgs.setuptools
@@ -46,7 +45,10 @@ python3.pkgs.buildPythonApplication rec {
 
   pythonImportsCheck = [ "ytdl_sub" ];
 
-  checkInputs = with python3.pkgs; [ pytestCheckHook pytest ];
+  checkInputs = with python3.pkgs; [
+    pytestCheckHook
+    pytest
+  ];
 
   disabledTests = [
     "test_logger_always_outputs_to_debug_file"

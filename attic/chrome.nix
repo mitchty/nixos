@@ -1,9 +1,11 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
 
-with pkgs; stdenv.mkDerivation rec {
+with pkgs;
+stdenv.mkDerivation rec {
   pname = "google-chrome";
   aname = "Stats";
   version = "107.0.5304.110";
@@ -16,7 +18,10 @@ with pkgs; stdenv.mkDerivation rec {
   buildInputs = [ undmg ];
   sourceRoot = "${aname}.app";
 
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
   installPhase = ''
     install -dm755 "$out/Applications/${aname}.app"
     cp -r . "$out/Applications/${aname}.app"

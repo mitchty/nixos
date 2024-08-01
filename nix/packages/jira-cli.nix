@@ -1,6 +1,7 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
 pkgs.buildGoModule rec {
   oname = "ankitpokhrel";

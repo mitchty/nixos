@@ -1,8 +1,10 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
-with pkgs; stdenv.mkDerivation rec {
+with pkgs;
+stdenv.mkDerivation rec {
   name = "p0deje";
   uname = "maccy";
   aname = "Maccy";
@@ -10,7 +12,10 @@ with pkgs; stdenv.mkDerivation rec {
 
   buildInputs = [ unzip ];
   sourceRoot = ".";
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
   installPhase = ''
     install -dm755 "$out/Applications"
     APP="$(echo *.app)"

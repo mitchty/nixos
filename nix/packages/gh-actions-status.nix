@@ -1,6 +1,7 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
 pkgs.buildGoModule rec {
   oname = "rsese";
@@ -16,9 +17,7 @@ pkgs.buildGoModule rec {
 
   vendorHash = "sha256-cUjY1yhkH1I2AT4iuLTTneRkgtjSFauWeBUxTzwa200=";
 
-  patches = [
-    ../../patches/gh-actions-status-go-deps.patch
-  ];
+  patches = [ ../../patches/gh-actions-status-go-deps.patch ];
 
   ldflags = [
     "-s"

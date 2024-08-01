@@ -1,9 +1,11 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
 
-with pkgs; stdenv.mkDerivation rec {
+with pkgs;
+stdenv.mkDerivation rec {
   name = "stats";
   uname = "exelban";
   aname = "Stats";
@@ -11,7 +13,10 @@ with pkgs; stdenv.mkDerivation rec {
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
   installPhase = ''
     set -x
     install -dm755 "$out/Applications"

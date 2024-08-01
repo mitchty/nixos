@@ -1,8 +1,10 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
-with pkgs; stdenv.mkDerivation rec {
+with pkgs;
+stdenv.mkDerivation rec {
   name = "dwarvesf";
   uname = "hidden";
   aname = "Hidden.Bar";

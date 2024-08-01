@@ -17,12 +17,14 @@
     };
   };
 
-  outputs = { flakelight, ... }@inputs:
+  outputs =
+    { flakelight, ... }@inputs:
     flakelight ./. rec {
-      systems = [ "x86_64-linux" "x86_64-darwin" ];
-
-      withOverlays = [
-        (import inputs.rust)
+      systems = [
+        "x86_64-linux"
+        "x86_64-darwin"
       ];
+
+      withOverlays = [ (import inputs.rust) ];
     };
 }

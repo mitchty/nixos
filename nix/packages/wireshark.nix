@@ -1,15 +1,20 @@
-{ stdenv
-, lib
-, pkgs
+{
+  stdenv,
+  lib,
+  pkgs,
 }:
-with pkgs; stdenv.mkDerivation rec {
+with pkgs;
+stdenv.mkDerivation rec {
   name = "wireshark";
   gname = "Wireshark";
   version = "4.2.4";
 
   buildInputs = [ undmg ];
   sourceRoot = ".";
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
   installPhase = ''
     install -dm755 "$out/Applications"
     cp -r ${gname}.app "$out/Applications/${gname}.app"

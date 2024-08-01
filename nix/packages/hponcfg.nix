@@ -1,14 +1,15 @@
 # This is actually from here: https://github.com/JohnAZoidberg/nur-packages
 #
 # Importing into my setup so I can better keep track of versioning/etc... or until his repo is a bit easier to use from flakes.
-{ stdenv
-, lib
-, fetchurl
-, rpmextract
-, autoPatchelfHook
-, makeWrapper
-, openssl
-, busybox
+{
+  stdenv,
+  lib,
+  fetchurl,
+  rpmextract,
+  autoPatchelfHook,
+  makeWrapper,
+  openssl,
+  busybox,
 }:
 stdenv.mkDerivation rec {
   pname = "hponcfg";

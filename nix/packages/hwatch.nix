@@ -1,8 +1,9 @@
-{ stdenv
-, lib
-, pkgs
-, rust
-, cargo
+{
+  stdenv,
+  lib,
+  pkgs,
+  rust,
+  cargo,
 }:
 pkgs.rustPlatform.buildRustPackage rec {
   pname = "hwatch";

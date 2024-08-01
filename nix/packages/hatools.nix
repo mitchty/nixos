@@ -1,7 +1,9 @@
-{ stdenv
-, lib
-, pkgs
-}: stdenv.mkDerivation rec {
+{
+  stdenv,
+  lib,
+  pkgs,
+}:
+stdenv.mkDerivation rec {
   oname = "fatalmind";
   pname = "hatools";
   version = "2.1.4";
@@ -13,9 +15,7 @@
     repo = pname;
   };
 
-  nativeBuildInputs = [
-    pkgs.autoreconfHook
-  ];
+  nativeBuildInputs = [ pkgs.autoreconfHook ];
 
   installPhase = ''
     make install DESTDIR=""

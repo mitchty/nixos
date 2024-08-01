@@ -1,8 +1,10 @@
-{ stdenv
-, lib
-, pkgs
-, makeWrapper
-}: stdenv.mkDerivation rec {
+{
+  stdenv,
+  lib,
+  pkgs,
+  makeWrapper,
+}:
+stdenv.mkDerivation rec {
   pname = "altshfmt";
   version = "0.2.0";
 
@@ -20,7 +22,12 @@
     install -dm755 $out/bin
     install -m755 altshfmt $out/bin
     wrapProgram "$out/bin/altshfmt" \
-      --prefix PATH : "${pkgs.lib.makeBinPath [ pkgs.gawk pkgs.shfmt ]}"
+      --prefix PATH : "${
+        pkgs.lib.makeBinPath [
+          pkgs.gawk
+          pkgs.shfmt
+        ]
+      }"
   '';
 
   meta = {
