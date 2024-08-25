@@ -1,8 +1,8 @@
-{
-  lib,
-  pkgs,
-  fetchFromGitHub,
-  python3,
+{ lib
+, pkgs
+, fetchFromGitHub
+, python3
+,
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "ytdl-sub";
@@ -23,6 +23,7 @@ python3.pkgs.buildPythonApplication rec {
         'DEFAULT_FFMPEG_PATH = "${pkgs.ffmpeg}/bin/ffmpeg' \
         --replace 'DEFAULT_FFPROBE_PATH = "/usr/bin/ffprobe"' \
         'DEFAULT_FFPROBE_PATH = "${pkgs.ffmpeg}/bin/ffprobe"'
+    substituteInPlace pyproject.toml --replace '2024.7.25' '2024.8.6'
   '';
 
   propagatedBuildInputs = with python3.pkgs; [
