@@ -69,5 +69,5 @@ python3.pkgs.buildPythonApplication rec {
     license = licenses.gpl3Only;
   };
 
-  latest = "curl --silent 'https://api.github.com/repos/jmbannon/${pname}/releases/latest' | jq -r '.tag_name'";
+  latest = "curl --silent https://api.github.com/repos/jmbannon/${pname}/tags | jq -r '.[] | .name' | grep -Ev post | head -n 1";
 }
