@@ -6,13 +6,13 @@
 pkgs.buildGoModule rec {
   oname = "ankitpokhrel";
   pname = "jira-cli";
-  version = "1.5.1";
+  version = "1.5.2";
 
   src = pkgs.fetchFromGitHub {
     owner = oname;
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-edytj9hB8lDwy3qGSyLudu5G4DSRGKhD0vDoWz5eUgs=";
+    sha256 = "sha256-Wp6uDvnTiNixn8GyEn8SeKPdXanUNN3b7yr9dT1D6uo=";
   };
 
   # For a rather contrived test in the test suite that uses this...
@@ -29,7 +29,7 @@ pkgs.buildGoModule rec {
 
   nativeBuildInputs = [ pkgs.less ];
 
-  vendorHash = "sha256-DAdzbANqr0fa4uO8k/yJFoirgbZiKOQhOH8u8d+ncao=";
+  vendorHash = "sha256-a11ZO/iV/Yhaq/cu504p2C/OkKJ04PeMMSoHrl7edvM=";
 
   meta.mainProgram = "jira";
 

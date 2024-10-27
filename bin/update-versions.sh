@@ -39,6 +39,7 @@ for pkg in ytdl-sub jira-cli; do
         printf "%s latest version out of date: ours=%s latest=%s\n" "${pkg}" "${ours}" "${latest}" >&2
         printf "nix run github:MiC92/nix-update -- --flake %s --version %s\n" "${pkg}" "${latest}"
         nix run github:MiC92/nix-update -- --flake "${pkg}" --version "${latest}"
+        nix build .#${pkg}
         git add -u
         git commit -m "${pkg} ${latest}"
       fi
