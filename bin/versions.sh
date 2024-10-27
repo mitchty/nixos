@@ -17,8 +17,15 @@ ok=0
 
 ${DIR:+cd $DIR}
 
+junk="ytdl-sub jira-cli"
+
+if [ "$(uname -s)" = "Darwin" ]; then
+  # For now ignore the macos stuff when ran on linux
+  junk="${junk} freetube keepingyouawake ferdium clocker maccy nheko obs-studio stats stretchly swiftbar wireshark vlc"
+fi
+
 # 2> /dev/null to nuke the stderr warning: messages
-for pkg in ytdl-sub freetube keepingyouawake ferdium clocker maccy gh-action-status hidden nheko obs-studio stats stretchly swiftbar wireshark vlc hwatch jira-cli transcrypt xq; do
+for pkg in ${junk}; do
   evalstring=$(nix eval --raw ".#${pkg}.latest" 2> /dev/null)
   if [ "$?" -eq 0 ]; then
     latest=$(eval "${evalstring}")
