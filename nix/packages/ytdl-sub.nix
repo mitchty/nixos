@@ -6,14 +6,14 @@
 }:
 python3.pkgs.buildPythonApplication rec {
   pname = "ytdl-sub";
-  version = "2024.12.14";
+  version = "2024.12.27";
   format = "pyproject";
 
   src = fetchFromGitHub {
     owner = "jmbannon";
     repo = "ytdl-sub";
     rev = "refs/tags/${version}";
-    hash = "sha256-CziLP/icD62eMei5tJM/Qnd4Q6fet1c1L2+aqyg5FuE=";
+    hash = "sha256-PmkBZl4aUw5Wgr83Nyyv54Rra/rDDm04B9bt6Xl+AzE=";
   };
 
   postPatch = ''
