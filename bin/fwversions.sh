@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash -p bash coreutils puppeteer-cli python310Packages.pdfx
+#!nix-shell -i bash -p bash coreutils puppeteer-cli poppler_utils
 #-*-mode: Shell-script; coding: utf-8;-*-
 # SPDX-License-Identifier: BlueOak-1.0.0
 # Description: Check for updates to firmware for crap I own, none of this shell
@@ -25,12 +25,22 @@ cleanup() {
 
 trap cleanup EXIT
 
+fw() {
+  v=${1?need a version bra}
+  printf "https://tascam.com/downloads/products/tascam/mixcast_4/mixcast4_fw_%s.zip" "${v}"
+}
+
 cd "${T}"
 
 puppeteer print --no-sandbox https://tascam.com/us/product/mixcast_4/download test.pdf > /dev/null 2>&1
 
-curr="https://tascam.com/downloads/products/tascam/mixcast_4/mixcast4_fw_v131.zip"
-latest=$(pdfx -v test.pdf | grep -E '(mixcast_4.*_fw_.*.zip)' | sort -ur | head -n1 | awk '{print $2}')
+curr="$(fw v131)"
+
+pdftotext test.pdf test.txt
+
+found=$(cat test.txt | grep -E 'Firmware V' | sort -ur | head -n1 | awk '{print $2}' | tr V v | tr -d \.)
+
+latest=$(fw ${found})
 
 if [[ "${curr}" != "${latest}" ]]; then
   ok=$((ok + 1))
@@ -39,5 +49,6 @@ if [[ "${curr}" != "${latest}" ]]; then
   printf "mixcast 4 firmware skew current=%s found=%s\n" "${old}" "${new}"
   printf "change curr to: %s\n" "${latest}"
 else
+  printf "%s already latest nothing to do \n" "${found}"
   ok=0
 fi
