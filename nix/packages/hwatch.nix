@@ -1,9 +1,9 @@
-{
-  stdenv,
-  lib,
-  pkgs,
-  rust,
-  cargo,
+{ stdenv
+, lib
+, pkgs
+, rust
+, cargo
+,
 }:
 pkgs.rustPlatform.buildRustPackage rec {
   pname = "hwatch";
@@ -17,7 +17,7 @@ pkgs.rustPlatform.buildRustPackage rec {
     forceFetchGit = true;
   };
 
-  cargoSha256 = "sha256-pEhogmK2WBj/PxcDtJs/H0XZhPiz3zCQMX2eUcAfnTE=";
+  cargoHash = "sha256-pEhogmK2WBj/PxcDtJs/H0XZhPiz3zCQMX2eUcAfnTE=";
 
   # passthru.tests.version = pkgs.testVersion {
   #   package = hwatch; };
