@@ -1,10 +1,3 @@
-* My out of band nix packages/modules flake repo
+** Defunct
 
-  For now this is a bit of a "before I upstream things to nixpkgs" test bed of stuff.
-
-  About the only thing of huge note is probably the [[file:bin/versions.sh][versions]] script that checks for newer package versions.
-
-  About the only things of note is I'm packaging the following not in nixpkgs:
-    - [[https://github.com/blacknon/hwatch][hwatch]] A watch command with history mostly...
-
-  Anything else in here should be considered a work in progress and thus ignored.
+Migrated all this to my regular flake. Here if anyone wants to use anything. But its a has been repo now.
